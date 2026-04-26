@@ -1,7 +1,12 @@
 import { useContext, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import useFetch from "@/hooks/useFetch";
 import { SessionContext } from "@/contexts/SessionContext";
@@ -15,25 +20,29 @@ export default function StudentSubjectView() {
     const stored = localStorage.getItem("user");
     const parsed = stored ? JSON.parse(stored) : {};
     const merged = { ...parsed, ...user } as any;
-    return String(merged?.classname || merged?.className || merged?.class || "");
+    return String(
+      merged?.classname || merged?.className || merged?.class || "",
+    );
   }, [user]);
 
   const { data, loading } = useFetch(
     currentSession?._id && className
       ? `/get-subject/${className}/${currentSession._id}`
-      : null
+      : null,
   );
   const subjects = useMemo(
     () => (Array.isArray(data) ? (data as any[]) : []),
-    [data]
+    [data],
   );
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-[#004aaa]">My Subjects</h2>
+        <h2 className="text-2xl font-bold text-[#180154]">My Subjects</h2>
         <p className="text-sm text-slate-500">
-          {className ? `${subjects.length} subject${subjects.length !== 1 ? "s" : ""} for ${className.toUpperCase()}` : "No class assigned"}
+          {className
+            ? `${subjects.length} subject${subjects.length !== 1 ? "s" : ""} for ${className.toUpperCase()}`
+            : "No class assigned"}
         </p>
       </div>
 
@@ -42,35 +51,55 @@ export default function StudentSubjectView() {
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow>
-                <TableHead className="pl-6 w-[60px] font-bold text-[#004aaa]">S/N</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Subject</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Teacher</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Class</TableHead>
+                <TableHead className="pl-6 w-[60px] font-bold text-[#180154]">
+                  S/N
+                </TableHead>
+                <TableHead className="font-bold text-[#180154]">
+                  Subject
+                </TableHead>
+                <TableHead className="font-bold text-[#180154]">
+                  Teacher
+                </TableHead>
+                <TableHead className="font-bold text-[#180154]">
+                  Class
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-10 text-slate-500">Loading subjects…</TableCell>
+                  <TableCell
+                    colSpan={4}
+                    className="text-center py-10 text-slate-500">
+                    Loading subjects…
+                  </TableCell>
                 </TableRow>
               ) : subjects.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-10 text-slate-500">No subjects found.</TableCell>
-                </TableRow>
-              ) : subjects.map((s, i) => (
-                <TableRow key={s._id || i} className="hover:bg-slate-50/50">
-                  <TableCell className="pl-6 text-slate-500">{i + 1}</TableCell>
-                  <TableCell className="font-bold text-[#004aaa]">
-                    {s.subjectName || s.name || "—"}
-                  </TableCell>
-                  <TableCell className="text-slate-600">
-                    {s.teacherName || s.teacher || s.username || "—"}
-                  </TableCell>
-                  <TableCell className="text-slate-500 text-sm">
-                    {s.classname || s.class || className || "—"}
+                  <TableCell
+                    colSpan={4}
+                    className="text-center py-10 text-slate-500">
+                    No subjects found.
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                subjects.map((s, i) => (
+                  <TableRow key={s._id || i} className="hover:bg-slate-50/50">
+                    <TableCell className="pl-6 text-slate-500">
+                      {i + 1}
+                    </TableCell>
+                    <TableCell className="font-bold text-[#180154]">
+                      {s.subjectName || s.name || "—"}
+                    </TableCell>
+                    <TableCell className="text-slate-600">
+                      {s.teacherName || s.teacher || s.username || "—"}
+                    </TableCell>
+                    <TableCell className="text-slate-500 text-sm">
+                      {s.classname || s.class || className || "—"}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>

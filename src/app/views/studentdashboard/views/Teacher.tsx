@@ -21,26 +21,33 @@ export default function StudentTeacherView() {
       const stored = localStorage.getItem("user");
       const parsed = stored ? JSON.parse(stored) : {};
       const merged = { ...parsed, ...user } as any;
-      return String(merged?.classname || merged?.className || merged?.class || "").trim();
+      return String(
+        merged?.classname || merged?.className || merged?.class || "",
+      ).trim();
     } catch {
-      return String((user as any)?.classname || (user as any)?.className || (user as any)?.class || "").trim();
+      return String(
+        (user as any)?.classname ||
+          (user as any)?.className ||
+          (user as any)?.class ||
+          "",
+      ).trim();
     }
   }, [user]);
 
   const { data: classData, loading: classLoading } = useFetch(
-    currentSession?._id ? `/class/${currentSession._id}` : null
+    currentSession?._id ? `/class/${currentSession._id}` : null,
   );
   const { data: teacherData, loading: teacherLoading } = useFetch(
-    currentSession?._id ? `/get-teachers/${currentSession._id}` : null
+    currentSession?._id ? `/get-teachers/${currentSession._id}` : null,
   );
 
   const classes = useMemo(
     () => (Array.isArray(classData) ? (classData as any[]) : []),
-    [classData]
+    [classData],
   );
   const teachers = useMemo(
     () => (Array.isArray(teacherData) ? (teacherData as any[]) : []),
-    [teacherData]
+    [teacherData],
   );
 
   const normalizedClassName = className.toUpperCase();
@@ -51,14 +58,17 @@ export default function StudentTeacherView() {
         (item: any) =>
           String(item.name || item.className || item.class || "")
             .trim()
-            .toUpperCase() === normalizedClassName
+            .toUpperCase() === normalizedClassName,
       ) || null,
-    [classes, normalizedClassName]
+    [classes, normalizedClassName],
   );
 
   const classTeacherName = useMemo(
-    () => String(assignedClass?.teacher || assignedClass?.classTeacher || "").trim(),
-    [assignedClass]
+    () =>
+      String(
+        assignedClass?.teacher || assignedClass?.classTeacher || "",
+      ).trim(),
+    [assignedClass],
   );
 
   const classTeacher = useMemo(() => {
@@ -72,7 +82,11 @@ export default function StudentTeacherView() {
         item.name,
         `${item.firstName || ""} ${item.lastName || ""}`.trim(),
       ]
-        .map((value) => String(value || "").trim().toUpperCase())
+        .map((value) =>
+          String(value || "")
+            .trim()
+            .toUpperCase(),
+        )
         .filter(Boolean);
 
       return candidates.includes(normalizedTeacherName);
@@ -101,7 +115,7 @@ export default function StudentTeacherView() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-[#004aaa]">My Class Teacher</h2>
+        <h2 className="text-2xl font-bold text-[#180154]">My Class Teacher</h2>
         <p className="text-sm text-slate-500">
           {className
             ? `Teacher assigned to ${className.toUpperCase()}`
@@ -114,43 +128,63 @@ export default function StudentTeacherView() {
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow>
-                <TableHead className="w-[60px] pl-6 font-bold text-[#004aaa]">S/N</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Class</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Name</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Email</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Phone</TableHead>
+                <TableHead className="w-[60px] pl-6 font-bold text-[#180154]">
+                  S/N
+                </TableHead>
+                <TableHead className="font-bold text-[#180154]">
+                  Class
+                </TableHead>
+                <TableHead className="font-bold text-[#180154]">Name</TableHead>
+                <TableHead className="font-bold text-[#180154]">
+                  Email
+                </TableHead>
+                <TableHead className="font-bold text-[#180154]">
+                  Phone
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-10 text-center text-slate-500">
+                  <TableCell
+                    colSpan={5}
+                    className="py-10 text-center text-slate-500">
                     Loading class teacher...
                   </TableCell>
                 </TableRow>
               ) : !className ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-10 text-center text-slate-500">
+                  <TableCell
+                    colSpan={5}
+                    className="py-10 text-center text-slate-500">
                     This student does not have a class assigned yet.
                   </TableCell>
                 </TableRow>
               ) : !classTeacher ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-10 text-center text-slate-500">
+                  <TableCell
+                    colSpan={5}
+                    className="py-10 text-center text-slate-500">
                     No class teacher has been assigned for this class yet.
                   </TableCell>
                 </TableRow>
               ) : (
-                <TableRow key={classTeacher._id || classTeacher.displayName} className="hover:bg-slate-50/50">
+                <TableRow
+                  key={classTeacher._id || classTeacher.displayName}
+                  className="hover:bg-slate-50/50">
                   <TableCell className="pl-6 text-slate-500">1</TableCell>
                   <TableCell className="text-sm font-medium text-slate-600">
                     {className.toUpperCase()}
                   </TableCell>
-                  <TableCell className="font-bold text-[#004aaa]">
+                  <TableCell className="font-bold text-[#180154]">
                     {classTeacher.displayName}
                   </TableCell>
-                  <TableCell className="text-blue-600">{classTeacher.email || "-"}</TableCell>
-                  <TableCell className="text-slate-600">{classTeacher.phone || "-"}</TableCell>
+                  <TableCell className="text-blue-600">
+                    {classTeacher.email || "-"}
+                  </TableCell>
+                  <TableCell className="text-slate-600">
+                    {classTeacher.phone || "-"}
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>

@@ -78,8 +78,7 @@ export default function UserProfilePage({ roleLabel = "User" }: Props) {
         <Button
           variant="ghost"
           onClick={() => setView("profile")}
-          className="text-slate-500 hover:text-[#004aaa] gap-2"
-        >
+          className="text-slate-500 hover:text-[#180154] gap-2">
           <ArrowLeft size={16} /> Back to Profile
         </Button>
 
@@ -88,8 +87,7 @@ export default function UserProfilePage({ roleLabel = "User" }: Props) {
           type="edit"
           loading={loading}
           onSubmit={handleSubmit}
-          onClose={() => setView("profile")}
-        >
+          onClose={() => setView("profile")}>
           <div className="space-y-2">
             <Label className="text-[10px] font-bold uppercase text-slate-400">
               Username
@@ -133,7 +131,9 @@ export default function UserProfilePage({ roleLabel = "User" }: Props) {
             </Label>
             <Input
               value={formData.dob}
-              onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, dob: e.target.value })
+              }
               placeholder="e.g. 2012-05-12"
             />
           </div>
@@ -194,14 +194,13 @@ export default function UserProfilePage({ roleLabel = "User" }: Props) {
     <div className="p-8 space-y-8 bg-slate-50 min-h-screen">
       <div className="flex justify-between items-end border-b border-slate-200 pb-2">
         <div className="flex gap-8">
-          <button className="text-[#004aaa] font-bold pb-2 px-2 transition-all">
+          <button className="text-[#180154] font-bold pb-2 px-2 transition-all">
             About
           </button>
         </div>
         <Button
           onClick={() => setView("edit")}
-          className="bg-[#004aaa] hover:bg-[#004aaa]/90 gap-2 mb-2 px-6 shadow-md transition-all active:scale-95"
-        >
+          className="bg-[#180154] hover:bg-[#180154]/90 gap-2 mb-2 px-6 shadow-md transition-all active:scale-95">
           <UserPen size={16} />
           Edit Profile
         </Button>
@@ -209,7 +208,7 @@ export default function UserProfilePage({ roleLabel = "User" }: Props) {
 
       <div className="max-w-4xl space-y-6">
         <header>
-          <h2 className="text-[#004aaa] text-2xl font-extrabold tracking-tight">
+          <h2 className="text-[#180154] text-2xl font-extrabold tracking-tight">
             {roleLabel} Profile
           </h2>
           <p className="text-slate-500 text-sm">
@@ -219,7 +218,7 @@ export default function UserProfilePage({ roleLabel = "User" }: Props) {
 
         <Card className="border-none shadow-sm ring-1 ring-slate-200">
           <CardHeader className="pb-4 border-b border-slate-50 bg-slate-50/50">
-            <CardTitle className="text-[#004aaa] text-lg font-bold">
+            <CardTitle className="text-[#180154] text-lg font-bold">
               Personal Information
             </CardTitle>
           </CardHeader>
@@ -228,12 +227,11 @@ export default function UserProfilePage({ roleLabel = "User" }: Props) {
               {info.map((item) => (
                 <div
                   key={item.label}
-                  className="grid grid-cols-[220px_1fr] items-baseline border-b border-slate-50 pb-3 last:border-0"
-                >
+                  className="grid grid-cols-[220px_1fr] items-baseline border-b border-slate-50 pb-3 last:border-0">
                   <span className="text-slate-500 font-semibold text-sm uppercase tracking-wider">
                     {item.label}
                   </span>
-                  <span className="text-[#004aaa] font-medium text-base">
+                  <span className="text-[#180154] font-medium text-base">
                     {item.value || "Not provided"}
                   </span>
                 </div>

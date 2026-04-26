@@ -53,8 +53,14 @@ const StudentInformation = () => {
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const itemsPerPage = 10;
 
-  const { data, loading: fetchLoading, reFetch } = useFetch(
-    currentSession && classId ? `/students/${currentSession._id}/${classId.toUpperCase()}` : null
+  const {
+    data,
+    loading: fetchLoading,
+    reFetch,
+  } = useFetch(
+    currentSession && classId
+      ? `/students/${currentSession._id}/${classId.toUpperCase()}`
+      : null,
   );
   const allStudents = Array.isArray(data) ? data : [];
 
@@ -86,7 +92,7 @@ const StudentInformation = () => {
           phone: selectedStudent.phone,
           password: newPassword || selectedStudent.password,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       toast.success("Student updated successfully");
       setView("list");
@@ -129,45 +135,122 @@ const StudentInformation = () => {
           onClose={() => {
             setView("list");
             setSelectedStudent(null);
-          }}
-        >
+          }}>
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Full Name</Label>
-            <Input value={selectedStudent.studentName || ""} onChange={(e) => setSelectedStudent({ ...selectedStudent, studentName: e.target.value })} />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Full Name
+            </Label>
+            <Input
+              value={selectedStudent.studentName || ""}
+              onChange={(e) =>
+                setSelectedStudent({
+                  ...selectedStudent,
+                  studentName: e.target.value,
+                })
+              }
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Admission Number</Label>
-            <Input value={selectedStudent.AdmNo || ""} onChange={(e) => setSelectedStudent({ ...selectedStudent, AdmNo: e.target.value })} />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Admission Number
+            </Label>
+            <Input
+              value={selectedStudent.AdmNo || ""}
+              onChange={(e) =>
+                setSelectedStudent({
+                  ...selectedStudent,
+                  AdmNo: e.target.value,
+                })
+              }
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Email Address</Label>
-            <Input type="email" value={selectedStudent.email || ""} onChange={(e) => setSelectedStudent({ ...selectedStudent, email: e.target.value })} />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Email Address
+            </Label>
+            <Input
+              type="email"
+              value={selectedStudent.email || ""}
+              onChange={(e) =>
+                setSelectedStudent({
+                  ...selectedStudent,
+                  email: e.target.value,
+                })
+              }
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Phone Number</Label>
-            <Input value={selectedStudent.phone || ""} onChange={(e) => setSelectedStudent({ ...selectedStudent, phone: e.target.value })} />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Phone Number
+            </Label>
+            <Input
+              value={selectedStudent.phone || ""}
+              onChange={(e) =>
+                setSelectedStudent({
+                  ...selectedStudent,
+                  phone: e.target.value,
+                })
+              }
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Parent/Guardian Name</Label>
-            <Input value={selectedStudent.parentsName || ""} onChange={(e) => setSelectedStudent({ ...selectedStudent, parentsName: e.target.value })} />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Parent/Guardian Name
+            </Label>
+            <Input
+              value={selectedStudent.parentsName || ""}
+              onChange={(e) =>
+                setSelectedStudent({
+                  ...selectedStudent,
+                  parentsName: e.target.value,
+                })
+              }
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Date of Birth</Label>
-            <Input type="date" value={selectedStudent.birthday ? String(selectedStudent.birthday).split("T")[0] : ""} onChange={(e) => setSelectedStudent({ ...selectedStudent, birthday: e.target.value })} />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Date of Birth
+            </Label>
+            <Input
+              type="date"
+              value={
+                selectedStudent.birthday
+                  ? String(selectedStudent.birthday).split("T")[0]
+                  : ""
+              }
+              onChange={(e) =>
+                setSelectedStudent({
+                  ...selectedStudent,
+                  birthday: e.target.value,
+                })
+              }
+            />
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Home Address</Label>
-            <Input value={selectedStudent.address || ""} onChange={(e) => setSelectedStudent({ ...selectedStudent, address: e.target.value })} />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Home Address
+            </Label>
+            <Input
+              value={selectedStudent.address || ""}
+              onChange={(e) =>
+                setSelectedStudent({
+                  ...selectedStudent,
+                  address: e.target.value,
+                })
+              }
+            />
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <Label className="text-[10px] font-bold uppercase text-black">New Password</Label>
+            <Label className="text-[10px] font-bold uppercase text-black">
+              New Password
+            </Label>
             <div className="relative">
               <Input
                 type={showPassword ? "text" : "password"}
@@ -176,7 +259,10 @@ const StudentInformation = () => {
                 placeholder="Leave blank to keep current password"
                 className="pr-10 border-black"
               />
-              <button type="button" onClick={() => setShowPassword((prev) => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-black hover:text-primary">
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-black hover:text-primary">
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
@@ -190,14 +276,23 @@ const StudentInformation = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-end print:hidden">
         <div>
-          <h2 className="text-2xl font-bold text-primary">Student Information - {classId?.toUpperCase()}</h2>
-          <p className="text-sm text-black">Managing {allStudents.length} students</p>
+          <h2 className="text-2xl font-bold text-primary">
+            Student Information - {classId?.toUpperCase()}
+          </h2>
+          <p className="text-sm text-black">
+            Managing {allStudents.length} students
+          </p>
         </div>
         <div className="flex gap-3">
-          <Button onClick={() => navigate("/student/admit")} className="gap-2 bg-primary hover:bg-primary/90">
+          <Button
+            onClick={() => navigate("/student/admit")}
+            className="gap-2 bg-primary hover:bg-primary/90">
             <Plus size={16} /> Add Student
           </Button>
-          <Button variant="outline" onClick={handlePrint} className="gap-2 border-black text-black hover:bg-primary/10">
+          <Button
+            variant="outline"
+            onClick={handlePrint}
+            className="gap-2 border-black text-black hover:bg-primary/10">
             <Printer size={16} /> Print List
           </Button>
         </div>
@@ -208,29 +303,53 @@ const StudentInformation = () => {
           <Table>
             <TableHeader className="bg-primary/10 print:bg-white">
               <TableRow>
-                <TableHead className="pl-6 font-bold text-primary">S/N</TableHead>
+                <TableHead className="pl-6 font-bold text-primary">
+                  S/N
+                </TableHead>
                 <TableHead className="font-bold text-primary">Adm No</TableHead>
                 <TableHead className="font-bold text-primary">Name</TableHead>
-                <TableHead className="font-bold text-primary print:hidden">Email</TableHead>
-                <TableHead className="pr-6 text-right font-bold text-primary print:hidden">Action</TableHead>
+                <TableHead className="font-bold text-primary print:hidden">
+                  Email
+                </TableHead>
+                <TableHead className="pr-6 text-right font-bold text-primary print:hidden">
+                  Action
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {fetchLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-10 text-center text-black">Loading students...</TableCell>
+                  <TableCell
+                    colSpan={5}
+                    className="py-10 text-center text-black">
+                    Loading students...
+                  </TableCell>
                 </TableRow>
               ) : currentStudents.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-10 text-center text-black">No students found in this class.</TableCell>
+                  <TableCell
+                    colSpan={5}
+                    className="py-10 text-center text-black">
+                    No students found in this class.
+                  </TableCell>
                 </TableRow>
               ) : (
                 currentStudents.map((student, index) => (
-                  <TableRow key={student._id} className="print:border-b hover:bg-primary/5">
-                    <TableCell className="pl-6">{indexOfFirstItem + index + 1}</TableCell>
-                    <TableCell className="font-bold text-black">{student.AdmNo}</TableCell>
-                    <TableCell className="font-medium text-primary">{student.studentName}</TableCell>
-                    <TableCell className="print:hidden text-black">{student.email}</TableCell>
+                  <TableRow
+                    key={student._id}
+                    className="print:border-b hover:bg-primary/5">
+                    <TableCell className="pl-6">
+                      {indexOfFirstItem + index + 1}
+                    </TableCell>
+                    <TableCell className="font-bold text-black">
+                      {student.AdmNo}
+                    </TableCell>
+                    <TableCell className="font-medium text-primary">
+                      {student.studentName}
+                    </TableCell>
+                    <TableCell className="print:hidden text-black">
+                      {student.email}
+                    </TableCell>
                     <TableCell className="pr-6 text-right print:hidden">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -239,25 +358,38 @@ const StudentInformation = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[200px]">
-                          <DropdownMenuItem onClick={() => navigate(`/student_mark_sheet/${student._id}`)} className="gap-2">
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/student_mark_sheet/${student._id}`)
+                            }
+                            className="gap-2">
                             <FileText size={14} /> Mark Sheet
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate(`/student_profile/${student._id}`)} className="gap-2">
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/student_profile/${student._id}`)
+                            }
+                            className="gap-2">
                             <User size={14} /> Profile
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate(`/student/id-card/${student._id}`)} className="gap-2">
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/student/id-card/${student._id}`)
+                            }
+                            className="gap-2">
                             <CreditCard size={14} /> ID Card
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditClick(student)} className="gap-2 text-[#004aaa] focus:bg-[#004aaa]/10 focus:text-[#004aaa]">
-                            <Pencil size={14} className="text-[#004aaa]" /> Edit
+                          <DropdownMenuItem
+                            onClick={() => handleEditClick(student)}
+                            className="gap-2 text-[#180154] focus:bg-[#180154]/10 focus:text-[#180154]">
+                            <Pencil size={14} className="text-[#180154]" /> Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
                               setSelectedStudent(student);
                               setIsDeleteOpen(true);
                             }}
-                            className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-600"
-                          >
+                            className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-600">
                             <Trash2 size={14} className="text-red-600" /> Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -272,7 +404,12 @@ const StudentInformation = () => {
       </Card>
 
       <div className="print:hidden">
-        <DataTablePagination totalItems={allStudents.length} itemsPerPage={itemsPerPage} currentPage={currentPage} onPageChange={setCurrentPage} />
+        <DataTablePagination
+          totalItems={allStudents.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       <DeleteModal

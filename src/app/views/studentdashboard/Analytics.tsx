@@ -43,7 +43,7 @@ const StudentDashboard = () => {
   const { currentSession } = useContext(SessionContext);
   const { user } = useAuth();
   const { data: noticesData } = useFetch(
-    currentSession ? `/get-all-notices/${currentSession._id}` : null
+    currentSession ? `/get-all-notices/${currentSession._id}` : null,
   );
 
   const notices = useMemo(
@@ -51,7 +51,7 @@ const StudentDashboard = () => {
       Array.isArray(noticesData) && noticesData.length > 0
         ? (noticesData as NoticeRecord[])
         : fallbackNotices,
-    [noticesData]
+    [noticesData],
   );
 
   const userInfo = useMemo(() => {
@@ -61,19 +61,19 @@ const StudentDashboard = () => {
   }, [user]);
 
   const className = String(
-    userInfo?.classname || userInfo?.className || userInfo?.class || ""
+    userInfo?.classname || userInfo?.className || userInfo?.class || "",
   );
   const studentId = String(userInfo?._id || userInfo?.id || "");
 
   const { data: classmatesData, loading: loadingClassmates } = useFetch(
     currentSession && className
       ? `/students/${currentSession._id}/${className}`
-      : null
+      : null,
   );
   const { data: subjectRows, loading: loadingSubjects } = useFetch(
     currentSession && className
       ? `/get-subject/${className}/${currentSession._id}`
-      : null
+      : null,
   );
 
   const statCards = [
@@ -96,7 +96,7 @@ const StudentDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold text-[#004aaa]">Student Dashboard</h1>
+        <h1 className="text-2xl font-bold text-[#180154]">Student Dashboard</h1>
         <p className="font-medium text-sm text-slate-500">
           {currentSession?.name
             ? `Current Session: ${currentSession.name}`
@@ -108,20 +108,18 @@ const StudentDashboard = () => {
         {statCards.map((card) => (
           <Card
             key={card.title}
-            className="overflow-hidden border-none shadow-sm ring-1 ring-slate-200"
-          >
+            className="overflow-hidden border-none shadow-sm ring-1 ring-slate-200">
             <CardContent className="p-0">
               <div className="grid min-h-[96px] grid-cols-1 sm:grid-cols-[44%_56%]">
                 <div
-                  className={`flex min-h-[72px] items-center justify-center py-3 sm:min-h-0 sm:py-0 ${card.accent}`}
-                >
+                  className={`flex min-h-[72px] items-center justify-center py-3 sm:min-h-0 sm:py-0 ${card.accent}`}>
                   <card.icon className="h-7 w-7" />
                 </div>
                 <div className="flex flex-col justify-center px-4 py-4 sm:px-6">
-                  <p className="text-sm font-semibold text-[#004aaa]">
+                  <p className="text-sm font-semibold text-[#180154]">
                     {card.title}
                   </p>
-                  <p className="mt-1 text-3xl font-black text-[#004aaa]">
+                  <p className="mt-1 text-3xl font-black text-[#180154]">
                     {card.isLoading ? "..." : card.value}
                   </p>
                 </div>
@@ -138,7 +136,7 @@ const StudentDashboard = () => {
               </div>
               <div className="flex flex-col justify-center gap-3 px-4 py-4 sm:px-6">
                 <div>
-                  <p className="text-sm font-semibold text-[#004aaa]">
+                  <p className="text-sm font-semibold text-[#180154]">
                     Student ID Card
                   </p>
                   <p className="mt-1 text-xs text-slate-500">
@@ -148,16 +146,14 @@ const StudentDashboard = () => {
                 <Button
                   asChild
                   size="sm"
-                  className="w-fit bg-[#004aaa] hover:bg-[#004aaa]/90"
-                  disabled={!studentId}
-                >
+                  className="w-fit bg-[#180154] hover:bg-[#180154]/90"
+                  disabled={!studentId}>
                   <Link
                     to={
                       studentId
                         ? `/student/id-card/${studentId}`
                         : "/student/dashboard/default"
-                    }
-                  >
+                    }>
                     View ID Card
                   </Link>
                 </Button>
@@ -172,7 +168,7 @@ const StudentDashboard = () => {
           <CardHeader className="border-b bg-slate-50/50">
             <div className="flex items-center gap-2">
               <CalendarIcon className="h-5 w-5 text-blue-600" />
-              <CardTitle className="text-xl text-[#004aaa]">
+              <CardTitle className="text-xl text-[#180154]">
                 Term Calendar
               </CardTitle>
             </div>
@@ -192,15 +188,14 @@ const StudentDashboard = () => {
           <CardHeader className="flex flex-col gap-3 border-b bg-slate-50/50 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Bell className="h-5 w-5 text-orange-500" />
-              <CardTitle className="text-lg text-[#004aaa] sm:text-xl">
+              <CardTitle className="text-lg text-[#180154] sm:text-xl">
                 School Notices
               </CardTitle>
             </div>
             <Button
               variant="ghost"
               size="sm"
-              className="w-full text-xs font-bold text-blue-600 sm:w-auto"
-            >
+              className="w-full text-xs font-bold text-blue-600 sm:w-auto">
               Refresh
             </Button>
           </CardHeader>
@@ -209,14 +204,13 @@ const StudentDashboard = () => {
               {notices.map((notice) => (
                 <div
                   key={notice._id || notice.id}
-                  className="flex gap-4 p-4 transition-colors hover:bg-slate-50/60"
-                >
-                  <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#004aaa]">
+                  className="flex gap-4 p-4 transition-colors hover:bg-slate-50/60">
+                  <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#180154]">
                     <Megaphone className="h-4 w-4" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
-                      <p className="text-sm font-semibold leading-6 text-[#004aaa]">
+                      <p className="text-sm font-semibold leading-6 text-[#180154]">
                         {notice.notice || "No notice content"}
                       </p>
                       <span className="whitespace-nowrap text-[10px] text-slate-400">

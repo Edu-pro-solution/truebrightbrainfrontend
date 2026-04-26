@@ -5,41 +5,56 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+:root {
     --background: 0 0% 100%;
     --foreground: 0 0% 8%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 8%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 8%;
-    --primary: 213 100% 33%;
+
+    /* Main Brand Color: #180154 -> 257 98% 17% */
+    --primary: 257 98% 17%;
     --primary-foreground: 0 0% 100%;
+
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 8%;
     --muted: 0 0% 97%;
     --muted-foreground: 0 0% 0%;
-    --accent: 213 100% 96%;
-    --accent-foreground: 213 100% 33%;
-    --destructive: 213 100% 33%;
+
+    /* Accent using a very light version of the brand color for hover states */
+    --accent: 257 98% 96%;
+    --accent-foreground: 257 98% 17%;
+
+    /* Changed destructive from red to match your brand choice */
+    --destructive: 257 98% 17%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 20% 88%;
+
+    /* Setting border to solid black as per your boss's request */
+    --border: 0 0% 0%;
     --input: 0 0% 0%;
-    --ring: 213 100% 33%;
+    --ring: 257 98% 17%;
     --radius: 0.5rem;
-    --sidebar-background: 213 100% 29%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 213 100% 29%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 213 100% 40%;
-    --sidebar-accent-foreground: 0 0% 96%;
-    --sidebar-border: 213 100% 40%;
+
+    /* Sidebar - Updated to match the brand navy */
+    --sidebar-background: 257 98% 17%;         
+    --sidebar-foreground: 0 0% 98%;           
+    --sidebar-primary: 0 0% 100%;               
+    --sidebar-primary-foreground: 257 98% 17%;  
+    
+    /* Sidebar accent slightly lighter for active items */
+    --sidebar-accent: 257 98% 25%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 257 98% 15%;
     --sidebar-ring: 0 0% 100%;
-    --chart-1: 213 100% 33%;
+
+    /* Charts using the brand color and grays for a clean look */
+    --chart-1: 257 98% 17%;
     --chart-2: 0 0% 15%;
     --chart-3: 0 0% 35%;
     --chart-4: 0 0% 55%;
     --chart-5: 0 0% 75%;
-  }
+}
 
   .dark {
     --background: 0 0% 0%;

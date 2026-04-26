@@ -36,7 +36,9 @@ export default function NoticeBoard() {
         <Bell className="h-6 w-6 text-primary" />
         <div>
           <h2 className="text-2xl font-bold text-primary">Notice Board</h2>
-          <p className="text-sm text-slate-500">School announcements and updates</p>
+          <p className="text-sm text-slate-500">
+            School announcements and updates
+          </p>
         </div>
       </div>
 
@@ -45,16 +47,16 @@ export default function NoticeBoard() {
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow className="hover:bg-transparent border-none">
-                <TableHead className="text-[#004aaa] font-bold text-center w-[80px]">
+                <TableHead className="text-[#180154] font-bold text-center w-[80px]">
                   S/N
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold">
+                <TableHead className="text-[#180154] font-bold">
                   Notice Content
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold text-center">
+                <TableHead className="text-[#180154] font-bold text-center">
                   Posted By
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold text-right pr-6">
+                <TableHead className="text-[#180154] font-bold text-right pr-6">
                   Action
                 </TableHead>
               </TableRow>
@@ -62,19 +64,25 @@ export default function NoticeBoard() {
             <TableBody>
               {listLoading ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="py-12 text-center text-slate-500">
+                  <TableCell
+                    colSpan={4}
+                    className="py-12 text-center text-slate-500">
                     Loading notices…
                   </TableCell>
                 </TableRow>
               ) : error ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="py-8 text-center text-sm text-destructive">
+                  <TableCell
+                    colSpan={4}
+                    className="py-8 text-center text-sm text-destructive">
                     Failed to load notices.
                   </TableCell>
                 </TableRow>
               ) : notices.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="py-12 text-center text-slate-500">
+                  <TableCell
+                    colSpan={4}
+                    className="py-12 text-center text-slate-500">
                     No notices yet.
                   </TableCell>
                 </TableRow>
@@ -82,36 +90,36 @@ export default function NoticeBoard() {
               {!listLoading &&
                 !error &&
                 currentNotices.map((item, index) => (
-                <TableRow
-                  key={(item._id as string) || (item.id as string) || index}
-                  className="hover:bg-slate-50/50">
-                  <TableCell className="text-center font-medium text-slate-500">
-                    {indexOfFirstItem + index + 1}
-                  </TableCell>
-                  <TableCell className="text-[#004aaa] max-w-[400px]">
-                    <p className="line-clamp-1 font-medium">
-                      {(item.notice as string) ||
-                        (item.message as string) ||
+                  <TableRow
+                    key={(item._id as string) || (item.id as string) || index}
+                    className="hover:bg-slate-50/50">
+                    <TableCell className="text-center font-medium text-slate-500">
+                      {indexOfFirstItem + index + 1}
+                    </TableCell>
+                    <TableCell className="text-[#180154] max-w-[400px]">
+                      <p className="line-clamp-1 font-medium">
+                        {(item.notice as string) ||
+                          (item.message as string) ||
+                          "—"}
+                      </p>
+                      <p className="text-[10px] text-slate-400 uppercase">
+                        {item.date
+                          ? new Date(item.date as string).toLocaleDateString()
+                          : ""}
+                      </p>
+                    </TableCell>
+                    <TableCell className="text-center text-slate-600 font-semibold text-sm">
+                      {(item.posted_by as string) ||
+                        (item.postedBy as string) ||
                         "—"}
-                    </p>
-                    <p className="text-[10px] text-slate-400 uppercase">
+                    </TableCell>
+                    <TableCell className="text-right pr-6 text-slate-500 text-sm">
                       {item.date
                         ? new Date(item.date as string).toLocaleDateString()
-                        : ""}
-                    </p>
-                  </TableCell>
-                  <TableCell className="text-center text-slate-600 font-semibold text-sm">
-                    {(item.posted_by as string) ||
-                      (item.postedBy as string) ||
-                      "—"}
-                  </TableCell>
-                  <TableCell className="text-right pr-6 text-slate-500 text-sm">
-                    {item.date
-                      ? new Date(item.date as string).toLocaleDateString()
-                      : "—"}
-                  </TableCell>
-                </TableRow>
-              ))}
+                        : "—"}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
 

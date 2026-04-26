@@ -48,13 +48,13 @@ const Login = () => {
           <div className="flex justify-center">
             <img
               src={logo}
-              alt="Edana Schools"
-              className="h-16 w-16 sm:h-20 sm:w-20 object-contain"
+              alt="True Bright Brain Schools"
+              className="h-24 w-24 sm:h-60 sm:w-60 object-contain"
             />
           </div>
           <div>
             <CardTitle className="text-xl sm:text-2xl text-foreground">
-              Edana Schools
+              True Bright Brain Schools
             </CardTitle>
             <CardDescription className="mt-1 text-sm">
               School Management System

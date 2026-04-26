@@ -24,17 +24,21 @@ import { SessionContext } from "@/contexts/SessionContext";
 export default function Parents() {
   const { currentSession } = useContext(SessionContext);
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-  const parentUrl = currentSession?._id ? `/get-parent/${currentSession._id}` : null;
-  const studentUrl = currentSession?._id ? `/users/student/${currentSession._id}` : null;
+  const parentUrl = currentSession?._id
+    ? `/get-parent/${currentSession._id}`
+    : null;
+  const studentUrl = currentSession?._id
+    ? `/users/student/${currentSession._id}`
+    : null;
   const { data, loading: listLoading, error, reFetch } = useFetch(parentUrl);
   const { data: studentsData } = useFetch(studentUrl);
   const parents = useMemo(
     () => (Array.isArray(data) ? (data as Record<string, unknown>[]) : []),
-    [data]
+    [data],
   );
   const students = useMemo(
     () => (Array.isArray(studentsData) ? (studentsData as any[]) : []),
-    [studentsData]
+    [studentsData],
   );
 
   const [view, setView] = useState<"list" | "add" | "edit">("list");
@@ -57,15 +61,25 @@ export default function Parents() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentParents = parents.slice(indexOfFirstItem, indexOfLastItem);
   const studentClasses = useMemo(
-    () => Array.from(new Set(students.map((student) => String(student.classname || "")).filter(Boolean))).sort(),
-    [students]
+    () =>
+      Array.from(
+        new Set(
+          students
+            .map((student) => String(student.classname || ""))
+            .filter(Boolean),
+        ),
+      ).sort(),
+    [students],
   );
   const filteredStudents = useMemo(
     () =>
       selectedClassFilter === "all"
         ? students
-        : students.filter((student) => String(student.classname || "") === selectedClassFilter),
-    [selectedClassFilter, students]
+        : students.filter(
+            (student) =>
+              String(student.classname || "") === selectedClassFilter,
+          ),
+    [selectedClassFilter, students],
   );
 
   const authHeaders = () => {
@@ -81,50 +95,76 @@ export default function Parents() {
       phone: item.phone || "",
       address: item.address || "",
       password: "",
-      linkedStudentIds: Array.isArray(item.linkedStudentIds) ? item.linkedStudentIds.map(String) : [],
+      linkedStudentIds: Array.isArray(item.linkedStudentIds)
+        ? item.linkedStudentIds.map(String)
+        : [],
     });
     setView("edit");
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentSession?._id) { toast.error("No active session"); return; }
+    if (!currentSession?._id) {
+      toast.error("No active session");
+      return;
+    }
     setLoading(true);
-    const linkedStudents = students.filter((student) => form.linkedStudentIds.includes(String(student._id)));
+    const linkedStudents = students.filter((student) =>
+      form.linkedStudentIds.includes(String(student._id)),
+    );
     const linkedClassNames = Array.from(
-      new Set(linkedStudents.map((student) => String(student.classname || "")).filter(Boolean))
+      new Set(
+        linkedStudents
+          .map((student) => String(student.classname || ""))
+          .filter(Boolean),
+      ),
     );
 
     try {
       if (view === "add") {
-        await axios.post(`${apiUrl}/api/create-parent`, {
-          username: form.name,
-          parentsName: form.name,
-          email: form.email,
-          phone: form.phone,
-          address: form.address,
-          password: form.password,
-          linkedStudentIds: form.linkedStudentIds,
-          linkedClassNames,
-          session: currentSession._id,
-        }, { headers: authHeaders() });
+        await axios.post(
+          `${apiUrl}/api/create-parent`,
+          {
+            username: form.name,
+            parentsName: form.name,
+            email: form.email,
+            phone: form.phone,
+            address: form.address,
+            password: form.password,
+            linkedStudentIds: form.linkedStudentIds,
+            linkedClassNames,
+            session: currentSession._id,
+          },
+          { headers: authHeaders() },
+        );
         toast.success("Parent created successfully");
       } else if (view === "edit" && selectedParent?._id) {
-        await axios.put(`${apiUrl}/api/parent/${selectedParent._id}`, {
-          parentsName: form.name,
-          email: form.email,
-          phone: form.phone,
-          address: form.address,
-          linkedStudentIds: form.linkedStudentIds,
-          linkedClassNames,
-          ...(form.password ? { password: form.password } : {}),
-        }, { headers: authHeaders() });
+        await axios.put(
+          `${apiUrl}/api/parent/${selectedParent._id}`,
+          {
+            parentsName: form.name,
+            email: form.email,
+            phone: form.phone,
+            address: form.address,
+            linkedStudentIds: form.linkedStudentIds,
+            linkedClassNames,
+            ...(form.password ? { password: form.password } : {}),
+          },
+          { headers: authHeaders() },
+        );
         toast.success("Parent updated successfully");
       }
       await reFetch();
       setView("list");
       setSelectedParent(null);
-      setForm({ name: "", email: "", phone: "", address: "", password: "", linkedStudentIds: [] });
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        password: "",
+        linkedStudentIds: [],
+      });
     } catch (err) {
       console.error(err);
       toast.error("Failed to save parent");
@@ -137,7 +177,9 @@ export default function Parents() {
     if (!selectedParent?._id) return;
     setLoading(true);
     try {
-      await axios.delete(`${apiUrl}/api/users/${selectedParent._id}`, { headers: authHeaders() });
+      await axios.delete(`${apiUrl}/api/users/${selectedParent._id}`, {
+        headers: authHeaders(),
+      });
       await reFetch();
       toast.success("Parent deleted successfully");
     } catch (err) {
@@ -163,7 +205,9 @@ export default function Parents() {
             setSelectedParent(null);
           }}>
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-slate-400">Full Name</Label>
+            <Label className="text-[10px] font-bold uppercase text-slate-400">
+              Full Name
+            </Label>
             <Input
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
@@ -173,42 +217,58 @@ export default function Parents() {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-slate-400">Email Address</Label>
+            <Label className="text-[10px] font-bold uppercase text-slate-400">
+              Email Address
+            </Label>
             <Input
               type="email"
               value={form.email}
-              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, email: e.target.value }))
+              }
               placeholder="parent@example.com"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-slate-400">Phone Number</Label>
+            <Label className="text-[10px] font-bold uppercase text-slate-400">
+              Phone Number
+            </Label>
             <Input
               value={form.phone}
-              onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, phone: e.target.value }))
+              }
               placeholder="080..."
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-slate-400">Home Address</Label>
+            <Label className="text-[10px] font-bold uppercase text-slate-400">
+              Home Address
+            </Label>
             <Input
               value={form.address}
-              onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, address: e.target.value }))
+              }
               placeholder="Full residential address"
             />
           </div>
 
           <div className="space-y-2 md:col-span-2">
             <Label className="text-[10px] font-bold uppercase text-slate-400">
-              {view === "edit" ? "New Password (leave blank to keep)" : "Account Password"}
+              {view === "edit"
+                ? "New Password (leave blank to keep)"
+                : "Account Password"}
             </Label>
             <Input
               type="password"
               value={form.password}
-              onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, password: e.target.value }))
+              }
               placeholder="Min 6 characters"
               minLength={view === "add" ? 6 : undefined}
               required={view === "add"}
@@ -222,12 +282,13 @@ export default function Parents() {
             <div className="space-y-3 rounded-md border border-black bg-white p-3">
               <div className="grid gap-3 md:grid-cols-[220px,1fr] md:items-center">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase text-slate-400">Filter By Class</Label>
+                  <Label className="text-[10px] font-bold uppercase text-slate-400">
+                    Filter By Class
+                  </Label>
                   <select
                     value={selectedClassFilter}
                     onChange={(e) => setSelectedClassFilter(e.target.value)}
-                    className="h-10 w-full rounded-md border border-black bg-white px-3 text-sm text-black outline-none"
-                  >
+                    className="h-10 w-full rounded-md border border-black bg-white px-3 text-sm text-black outline-none">
                     <option value="all">All Classes</option>
                     {studentClasses.map((className) => (
                       <option key={className} value={className}>
@@ -237,37 +298,45 @@ export default function Parents() {
                   </select>
                 </div>
                 <p className="text-xs text-black">
-                  Showing {filteredStudents.length} student{filteredStudents.length === 1 ? "" : "s"}.
+                  Showing {filteredStudents.length} student
+                  {filteredStudents.length === 1 ? "" : "s"}.
                 </p>
               </div>
               <div className="grid max-h-56 grid-cols-1 gap-2 overflow-y-auto pr-1 md:grid-cols-2">
-              {filteredStudents.length === 0 ? (
-                <p className="text-sm text-slate-500">No students available for linking yet.</p>
-              ) : (
-                filteredStudents.map((student) => {
-                  const id = String(student._id);
-                  const checked = form.linkedStudentIds.includes(id);
-                  return (
-                    <label key={id} className="flex items-center gap-2 rounded-md border border-black px-3 py-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() =>
-                          setForm((prev) => ({
-                            ...prev,
-                            linkedStudentIds: checked
-                              ? prev.linkedStudentIds.filter((item) => item !== id)
-                              : [...prev.linkedStudentIds, id],
-                          }))
-                        }
-                      />
-                      <span className="text-black">
-                        {student.studentName || student.username} {student.classname ? `- ${student.classname}` : ""}
-                      </span>
-                    </label>
-                  );
-                })
-              )}
+                {filteredStudents.length === 0 ? (
+                  <p className="text-sm text-slate-500">
+                    No students available for linking yet.
+                  </p>
+                ) : (
+                  filteredStudents.map((student) => {
+                    const id = String(student._id);
+                    const checked = form.linkedStudentIds.includes(id);
+                    return (
+                      <label
+                        key={id}
+                        className="flex items-center gap-2 rounded-md border border-black px-3 py-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              linkedStudentIds: checked
+                                ? prev.linkedStudentIds.filter(
+                                    (item) => item !== id,
+                                  )
+                                : [...prev.linkedStudentIds, id],
+                            }))
+                          }
+                        />
+                        <span className="text-black">
+                          {student.studentName || student.username}{" "}
+                          {student.classname ? `- ${student.classname}` : ""}
+                        </span>
+                      </label>
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>
@@ -279,10 +348,21 @@ export default function Parents() {
   return (
     <div className="space-y-6 p-4">
       <div className="flex flex-row gap-4 justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#004aaa]">Parent Board</h2>
+        <h2 className="text-2xl font-bold text-[#180154]">Parent Board</h2>
         <Button
-          onClick={() => { setForm({ name: "", email: "", phone: "", address: "", password: "", linkedStudentIds: [] }); setSelectedParent(null); setView("add"); }}
-          className="w-fit gap-2 bg-[#004aaa] hover:bg-[#004aaa]/90">
+          onClick={() => {
+            setForm({
+              name: "",
+              email: "",
+              phone: "",
+              address: "",
+              password: "",
+              linkedStudentIds: [],
+            });
+            setSelectedParent(null);
+            setView("add");
+          }}
+          className="w-fit gap-2 bg-[#180154] hover:bg-[#180154]/90">
           <Plus className="h-4 w-4" />
           Add New Parent
         </Button>
@@ -296,22 +376,22 @@ export default function Parents() {
                 <TableHead className="w-[50px] pl-4">
                   <Checkbox className="border-slate-300" />
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold text-center w-[100px]">
+                <TableHead className="text-[#180154] font-bold text-center w-[100px]">
                   S/N
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold text-center">
+                <TableHead className="text-[#180154] font-bold text-center">
                   Name
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold text-center">
+                <TableHead className="text-[#180154] font-bold text-center">
                   Email
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold text-center">
+                <TableHead className="text-[#180154] font-bold text-center">
                   Phone
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold text-center">
+                <TableHead className="text-[#180154] font-bold text-center">
                   Address
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold text-right pr-4">
+                <TableHead className="text-[#180154] font-bold text-right pr-4">
                   Action
                 </TableHead>
               </TableRow>
@@ -319,13 +399,17 @@ export default function Parents() {
             <TableBody>
               {listLoading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-12 text-center text-slate-500">
+                  <TableCell
+                    colSpan={7}
+                    className="py-12 text-center text-slate-500">
                     Loading parents…
                   </TableCell>
                 </TableRow>
               ) : error ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-8 text-center text-sm text-destructive">
+                  <TableCell
+                    colSpan={7}
+                    className="py-8 text-center text-sm text-destructive">
                     Failed to load parents.
                   </TableCell>
                 </TableRow>
@@ -340,7 +424,7 @@ export default function Parents() {
                     <TableCell className="text-center font-medium text-slate-500">
                       {indexOfFirstItem + index + 1}
                     </TableCell>
-                    <TableCell className="text-[#004aaa] max-w-[400px] font-medium">
+                    <TableCell className="text-[#180154] max-w-[400px] font-medium">
                       <p className="line-clamp-1">
                         {(item.parentsName as string) ||
                           (item.name as string) ||
@@ -384,7 +468,7 @@ export default function Parents() {
                 <TableRow>
                   <TableCell
                     colSpan={7}
-                    className="h-24 text-center text-[#004aaa] font-medium py-12">
+                    className="h-24 text-center text-[#180154] font-medium py-12">
                     No Parent to display.
                   </TableCell>
                 </TableRow>

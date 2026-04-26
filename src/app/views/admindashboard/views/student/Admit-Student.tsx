@@ -20,8 +20,10 @@ function AdmitStudent() {
   const { currentSession } = useContext(SessionContext);
   const { toast } = useToast();
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-  const { data: classes } = useFetch(currentSession ? `/class/${currentSession._id}` : null);
-  
+  const { data: classes } = useFetch(
+    currentSession ? `/class/${currentSession._id}` : null,
+  );
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -47,7 +49,11 @@ function AdmitStudent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentSession) {
-      toast({ title: "Error", description: "No active session found.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "No active session found.",
+        variant: "destructive",
+      });
       return;
     }
     setLoading(true);
@@ -58,14 +64,29 @@ function AdmitStudent() {
         sessionId: currentSession._id,
       };
       await axios.post(`${apiUrl}/api/register`, dataToSubmit);
-      toast({ title: "Success", description: "Student admitted successfully!" });
+      toast({
+        title: "Success",
+        description: "Student admitted successfully!",
+      });
       setFormData({
-        username: "", classname: "", email: "", parentsName: "", phone: "",
-        birthday: "", address: "", AdmNo: "", password: "", studentName: ""
+        username: "",
+        classname: "",
+        email: "",
+        parentsName: "",
+        phone: "",
+        birthday: "",
+        address: "",
+        AdmNo: "",
+        password: "",
+        studentName: "",
       });
     } catch (err) {
       console.error("Error admitting student:", err);
-      toast({ title: "Error", description: "Failed to admit student.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to admit student.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -73,7 +94,7 @@ function AdmitStudent() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight text-[#004aaa]">
+        <h2 className="text-2xl font-bold tracking-tight text-[#180154]">
           Admit New Student
         </h2>
         <p className="text-muted-foreground">
@@ -94,20 +115,31 @@ function AdmitStudent() {
               {/* Username */}
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
-                <Input id="username" value={formData.username} onChange={handleChange} placeholder="johndoe123" required />
+                <Input
+                  id="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="johndoe123"
+                  required
+                />
               </div>
 
               {/* Class Selection */}
               <div className="space-y-2">
                 <Label htmlFor="classname">Class</Label>
-                <Select onValueChange={handleSelectChange} value={formData.classname}>
+                <Select
+                  onValueChange={handleSelectChange}
+                  value={formData.classname}>
                   <SelectTrigger id="classname">
                     <SelectValue placeholder="Select a class" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Array.isArray(classes) && classes.map((cls: any) => (
-                      <SelectItem key={cls._id} value={cls.name}>{cls.name}</SelectItem>
-                    ))}
+                    {Array.isArray(classes) &&
+                      classes.map((cls: any) => (
+                        <SelectItem key={cls._id} value={cls.name}>
+                          {cls.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -140,37 +172,75 @@ function AdmitStudent() {
               {/* Phone Number */}
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="+234..." required />
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="+234..."
+                  required
+                />
               </div>
 
               {/* Date of Birth */}
               <div className="space-y-2">
                 <Label htmlFor="birthday">Date of Birth</Label>
-                <Input id="birthday" type="date" value={formData.birthday} onChange={handleChange} required />
+                <Input
+                  id="birthday"
+                  type="date"
+                  value={formData.birthday}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               {/* Home Address */}
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="address">Home Address</Label>
-                <Input id="address" value={formData.address} onChange={handleChange} placeholder="123 School Lane, Lagos" required />
+                <Input
+                  id="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="123 School Lane, Lagos"
+                  required
+                />
               </div>
 
               {/* Admission No */}
               <div className="space-y-2">
                 <Label htmlFor="AdmNo">Admission No</Label>
-                <Input id="AdmNo" value={formData.AdmNo} onChange={handleChange} placeholder="ED/2026/001" required />
+                <Input
+                  id="AdmNo"
+                  value={formData.AdmNo}
+                  onChange={handleChange}
+                  placeholder="ED/2026/001"
+                  required
+                />
               </div>
 
               {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" value={formData.password} onChange={handleChange} placeholder="••••••••" required />
+                <Input
+                  id="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  required
+                />
               </div>
 
               {/* Student Name */}
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="studentName">Student Name</Label>
-                <Input id="studentName" value={formData.studentName} onChange={handleChange} placeholder="Enter full name" required />
+                <Input
+                  id="studentName"
+                  value={formData.studentName}
+                  onChange={handleChange}
+                  placeholder="Enter full name"
+                  required
+                />
               </div>
             </div>
 
@@ -178,8 +248,12 @@ function AdmitStudent() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="bg-[#004aaa] hover:bg-[#004aaa]/90 px-8 gap-2">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
+                className="bg-[#180154] hover:bg-[#180154]/90 px-8 gap-2">
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <UserPlus className="h-4 w-4" />
+                )}
                 {loading ? "Submitting..." : "Submit Admission"}
               </Button>
             </div>

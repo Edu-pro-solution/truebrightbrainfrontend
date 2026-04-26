@@ -13,9 +13,12 @@ export default function JambPastQuestions() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-[#004aaa]">JAMB Past Questions</h2>
+        <h2 className="text-2xl font-bold text-[#180154]">
+          JAMB Past Questions
+        </h2>
         <p className="text-sm text-slate-500">
-          Redirecting you to the EduPro CBT platform for past questions practice.
+          Redirecting you to the EduPro CBT platform for past questions
+          practice.
         </p>
       </div>
 
@@ -24,7 +27,7 @@ export default function JambPastQuestions() {
           <p className="text-sm text-slate-600">
             If the redirect does not happen automatically, use the button below.
           </p>
-          <Button asChild className="gap-2 bg-[#004aaa] hover:bg-[#004aaa]/90">
+          <Button asChild className="gap-2 bg-[#180154] hover:bg-[#180154]/90">
             <a href={CBT_URL} target="_blank" rel="noopener noreferrer">
               Open EduPro CBT
               <ExternalLink className="h-4 w-4" />

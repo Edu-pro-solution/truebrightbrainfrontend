@@ -5,14 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SessionContext } from "@/contexts/SessionContext";
 import { useAuth } from "@/contexts/AuthContext";
 import useFetch from "@/hooks/useFetch";
-import {
-  GraduationCap,
-  Megaphone,
-  Shield,
-  Users,
-  Users2,
-} from "lucide-react";
-
+import { GraduationCap, Megaphone, Shield, Users, Users2 } from "lucide-react";
 
 type NoticeRecord = {
   _id?: string;
@@ -90,7 +83,7 @@ const TeacherDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold text-[#004aaa]">Teacher Dashboard</h1>
+        <h1 className="text-2xl font-bold text-[#180154]">Teacher Dashboard</h1>
         <p className="text-sm text-slate-500 font-medium">
           {currentSession?.name
             ? `Current Session: ${currentSession.name}`
@@ -102,20 +95,18 @@ const TeacherDashboard = () => {
         {statCards.map((card) => (
           <Card
             key={card.title}
-            className="overflow-hidden border-none shadow-sm ring-1 ring-slate-200"
-          >
+            className="overflow-hidden border-none shadow-sm ring-1 ring-slate-200">
             <CardContent className="p-0">
               <div className="grid min-h-[96px] grid-cols-1 sm:grid-cols-[44%_56%]">
                 <div
-                  className={`flex min-h-[72px] items-center justify-center py-3 sm:min-h-0 sm:py-0 ${card.accent}`}
-                >
+                  className={`flex min-h-[72px] items-center justify-center py-3 sm:min-h-0 sm:py-0 ${card.accent}`}>
                   <card.icon className="h-7 w-7" />
                 </div>
                 <div className="flex flex-col justify-center px-4 py-4 sm:px-6">
-                  <p className="text-sm font-semibold text-[#004aaa]">
+                  <p className="text-sm font-semibold text-[#180154]">
                     {card.title}
                   </p>
-                  <p className="text-3xl font-black text-[#004aaa] mt-1">
+                  <p className="text-3xl font-black text-[#180154] mt-1">
                     {loadingCounts ? "..." : card.value}
                   </p>
                 </div>
@@ -125,17 +116,17 @@ const TeacherDashboard = () => {
         ))}
       </div>
 
-     <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            <Card className="lg:col-span-2">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">Event Calendar</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center">
-                <Calendar />
-              </CardContent>
-            </Card>
-    
-            {/* <Card className="lg:col-span-1">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Event Calendar</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center">
+            <Calendar />
+          </CardContent>
+        </Card>
+
+        {/* <Card className="lg:col-span-1">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">Recruitment Pipeline</CardTitle>
               </CardHeader>
@@ -157,47 +148,51 @@ const TeacherDashboard = () => {
                 </div>
               </CardContent>
             </Card> */}
-    
-            <Card className="lg:col-span-3">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base text-[#004aaa]">
-                  Notice Board
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {notices.length > 0 ? (
-                    notices.map((notice) => (
-                      <div
-                        key={notice._id || notice.id}
-                        className="flex items-start gap-3 border-b border-slate-50 pb-3 last:border-0 last:pb-0">
-                        <div className="mt-0.5 h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                          <Megaphone className="h-4 w-4 text-[#004aaa]" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex justify-between items-start gap-2">
-                            <p className="text-xs font-bold text-[#004aaa] truncate line-clamp-2">
-                              {notice.notice || "—"}
-                            </p>
-                            <p className="text-[10px] text-muted-foreground whitespace-nowrap">
-                              {notice.date ? new Date(notice.date).toLocaleDateString() : ""}
-                            </p>
-                          </div>
-                          <p className="text-[10px] font-medium text-blue-600 mt-1">
-                            By: {notice.posted_by || "Admin"}
-                          </p>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="py-6 text-center">
-                      <p className="text-xs text-muted-foreground italic">No notices available</p>
+
+        <Card className="lg:col-span-3">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base text-[#180154]">
+              Notice Board
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {notices.length > 0 ? (
+                notices.map((notice) => (
+                  <div
+                    key={notice._id || notice.id}
+                    className="flex items-start gap-3 border-b border-slate-50 pb-3 last:border-0 last:pb-0">
+                    <div className="mt-0.5 h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                      <Megaphone className="h-4 w-4 text-[#180154]" />
                     </div>
-                  )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex justify-between items-start gap-2">
+                        <p className="text-xs font-bold text-[#180154] truncate line-clamp-2">
+                          {notice.notice || "—"}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground whitespace-nowrap">
+                          {notice.date
+                            ? new Date(notice.date).toLocaleDateString()
+                            : ""}
+                        </p>
+                      </div>
+                      <p className="text-[10px] font-medium text-blue-600 mt-1">
+                        By: {notice.posted_by || "Admin"}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-6 text-center">
+                  <p className="text-xs text-muted-foreground italic">
+                    No notices available
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

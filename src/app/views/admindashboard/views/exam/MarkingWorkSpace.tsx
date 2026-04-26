@@ -42,7 +42,10 @@ export default function MarkingWorkspace({
   const [selectedClassName, setSelectedClassName] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedStudent, setSelectedStudent] = useState("");
-  const [theoryAnswer, setTheoryAnswer] = useState<Record<string, string> | null>(null);
+  const [theoryAnswer, setTheoryAnswer] = useState<Record<
+    string,
+    string
+  > | null>(null);
   const [loadingAnswer, setLoadingAnswer] = useState(false);
   const [answerError, setAnswerError] = useState("");
 
@@ -50,7 +53,8 @@ export default function MarkingWorkspace({
     currentSession ? `/class/${currentSession._id}` : null,
   );
   const classes = useMemo(
-    () => (Array.isArray(classList) ? (classList as Record<string, unknown>[]) : []),
+    () =>
+      Array.isArray(classList) ? (classList as Record<string, unknown>[]) : [],
     [classList],
   );
 
@@ -61,7 +65,9 @@ export default function MarkingWorkspace({
   );
   const subjects = useMemo(
     () =>
-      Array.isArray(subjectList) ? (subjectList as Record<string, unknown>[]) : [],
+      Array.isArray(subjectList)
+        ? (subjectList as Record<string, unknown>[])
+        : [],
     [subjectList],
   );
 
@@ -72,7 +78,9 @@ export default function MarkingWorkspace({
   );
   const students = useMemo(
     () =>
-      Array.isArray(studentList) ? (studentList as Record<string, unknown>[]) : [],
+      Array.isArray(studentList)
+        ? (studentList as Record<string, unknown>[])
+        : [],
     [studentList],
   );
 
@@ -86,7 +94,9 @@ export default function MarkingWorkspace({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
-  const [uploadedImage, setUploadedImage] = useState<HTMLImageElement | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<HTMLImageElement | null>(
+    null,
+  );
   const [activeTool, setActiveTool] = useState<string | number>("check");
   const [isDrawing, setIsDrawing] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
@@ -116,9 +126,17 @@ export default function MarkingWorkspace({
   };
 
   const handleLoadAnswer = useCallback(async () => {
-    if (!selectedClassName || !selectedSubject || !selectedStudent || !currentSession?._id) return;
+    if (
+      !selectedClassName ||
+      !selectedSubject ||
+      !selectedStudent ||
+      !currentSession?._id
+    )
+      return;
     if (mode === "offline") {
-      setAnswerError("In offline mode, upload a scanned answer sheet image using the Upload button.");
+      setAnswerError(
+        "In offline mode, upload a scanned answer sheet image using the Upload button.",
+      );
       return;
     }
     setLoadingAnswer(true);
@@ -137,13 +155,22 @@ export default function MarkingWorkspace({
       }
     } catch (err: any) {
       setTheoryAnswer(null);
-      setAnswerError(err?.response?.status === 404
-        ? "No online exam answer found for this student and subject."
-        : "Failed to load answer.");
+      setAnswerError(
+        err?.response?.status === 404
+          ? "No online exam answer found for this student and subject."
+          : "Failed to load answer.",
+      );
     } finally {
       setLoadingAnswer(false);
     }
-  }, [selectedClassName, selectedSubject, selectedStudent, currentSession, apiUrl, mode]);
+  }, [
+    selectedClassName,
+    selectedSubject,
+    selectedStudent,
+    currentSession,
+    apiUrl,
+    mode,
+  ]);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -167,7 +194,7 @@ export default function MarkingWorkspace({
     ctx.fillStyle = "#1e293b";
     let y = 30;
     Object.entries(theoryAnswer).forEach(([qId, answer], idx) => {
-      ctx.fillStyle = "#004aaa";
+      ctx.fillStyle = "#180154";
       ctx.font = "bold 14px Arial";
       ctx.fillText(`Q${idx + 1} (${qId.slice(-4)}):`, 20, y);
       y += 20;
@@ -186,7 +213,10 @@ export default function MarkingWorkspace({
           line = test;
         }
       }
-      if (line.trim()) { ctx.fillText(line.trim(), 30, y); y += 18; }
+      if (line.trim()) {
+        ctx.fillText(line.trim(), 30, y);
+        y += 18;
+      }
       y += 10;
       if (y > canvasRef.current.height - 30) return;
     });
@@ -237,7 +267,13 @@ export default function MarkingWorkspace({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (uploadedImage) {
         const scale = canvas.width / uploadedImage.width;
-        ctx.drawImage(uploadedImage, 0, 0, canvas.width, uploadedImage.height * scale);
+        ctx.drawImage(
+          uploadedImage,
+          0,
+          0,
+          canvas.width,
+          uploadedImage.height * scale,
+        );
       }
       return;
     }
@@ -258,13 +294,13 @@ export default function MarkingWorkspace({
           <div
             className={`h-2 w-2 rounded-full ${mode === "online" ? "bg-green-500" : "bg-orange-500"} animate-pulse`}
           />
-          <span className="text-[10px] font-black uppercase tracking-widest text-[#004aaa]">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#180154]">
             {mode}
           </span>
         </div>
 
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 overflow-x-auto py-1 sm:flex-nowrap lg:gap-2">
-          <div className="flex h-10 min-w-[140px] max-w-full shrink-0 items-center rounded-md border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-[#004aaa]">
+          <div className="flex h-10 min-w-[140px] max-w-full shrink-0 items-center rounded-md border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-[#180154]">
             <span className="truncate">
               {currentSession?.name || "Session"}
             </span>
@@ -320,8 +356,13 @@ export default function MarkingWorkspace({
           </Select>
           <Button
             onClick={handleLoadAnswer}
-            disabled={!selectedClassName || !selectedSubject || !selectedStudent || loadingAnswer}
-            className="h-10 shrink-0 bg-[#004aaa] px-4 text-xs font-bold">
+            disabled={
+              !selectedClassName ||
+              !selectedSubject ||
+              !selectedStudent ||
+              loadingAnswer
+            }
+            className="h-10 shrink-0 bg-[#180154] px-4 text-xs font-bold">
             {loadingAnswer ? "Loading…" : "Load Answer"}
           </Button>
         </div>
@@ -344,7 +385,7 @@ export default function MarkingWorkspace({
               </Button>
             </>
           )}
-          <Button className="h-10 flex-1 gap-2 bg-[#004aaa] font-bold shadow-lg hover:bg-[#004aaa]/90 sm:flex-initial sm:px-6">
+          <Button className="h-10 flex-1 gap-2 bg-[#180154] font-bold shadow-lg hover:bg-[#180154]/90 sm:flex-initial sm:px-6">
             <Save size={16} /> Save Marks
           </Button>
         </div>
@@ -419,10 +460,15 @@ export default function MarkingWorkspace({
 
         {/* 3. CENTER VIEWPORT (IMAGE + CANVAS) */}
         <main className="order-1 flex min-h-0 min-w-0 flex-1 justify-center overflow-auto bg-slate-200 p-2 sm:p-4 lg:order-none lg:p-8">
-          <div className="relative w-full max-w-[800px] rounded-sm bg-white shadow-2xl" style={{ aspectRatio: "800/1100" }}>
+          <div
+            className="relative w-full max-w-[800px] rounded-sm bg-white shadow-2xl"
+            style={{ aspectRatio: "800/1100" }}>
             {!theoryAnswer && (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 pointer-events-none z-0 px-8 text-center">
-                <p className="text-sm font-medium">{answerError || "Select class, subject & student, then click Load Answer"}</p>
+                <p className="text-sm font-medium">
+                  {answerError ||
+                    "Select class, subject & student, then click Load Answer"}
+                </p>
               </div>
             )}
             <canvas
@@ -442,7 +488,7 @@ export default function MarkingWorkspace({
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
                   Final Result
                 </p>
-                <h2 className="text-4xl font-black text-[#004aaa]">
+                <h2 className="text-4xl font-black text-[#180154]">
                   {totalScore}{" "}
                   <span className="text-sm text-slate-300">
                     / {totalPossible}
@@ -470,7 +516,7 @@ export default function MarkingWorkspace({
                   key={q.id}
                   className="p-4 border border-slate-100 rounded-2xl bg-white shadow-sm hover:border-blue-300 group">
                   <div className="flex justify-between items-center mb-3">
-                    <span className="text-[10px] font-black text-[#004aaa] uppercase tracking-tighter">
+                    <span className="text-[10px] font-black text-[#180154] uppercase tracking-tighter">
                       Question {i + 1}
                     </span>
                     <button
@@ -538,7 +584,7 @@ export default function MarkingWorkspace({
           </ScrollArea>
 
           <div className="p-4 bg-slate-50 border-t">
-            <Button className="w-full bg-[#004aaa] h-12 font-bold shadow-lg shadow-blue-900/10">
+            <Button className="w-full bg-[#180154] h-12 font-bold shadow-lg shadow-blue-900/10">
               Finalize & Lock Marks
             </Button>
           </div>

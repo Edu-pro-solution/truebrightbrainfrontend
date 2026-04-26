@@ -23,7 +23,9 @@ import { DeleteModal } from "@/components/DeleteModal";
 const Admin = () => {
   const { currentSession } = useContext(SessionContext);
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-  const adminUrl = currentSession?._id ? `/get-session-admin/${currentSession._id}` : null;
+  const adminUrl = currentSession?._id
+    ? `/get-session-admin/${currentSession._id}`
+    : null;
   const { data, loading: listLoading, error, reFetch } = useFetch(adminUrl);
   const admins = useMemo(
     () => (Array.isArray(data) ? (data as Record<string, unknown>[]) : []),
@@ -36,7 +38,13 @@ const Admin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", password: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    password: "",
+  });
   const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -68,28 +76,39 @@ const Admin = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentSession?._id) { toast.error("No active session"); return; }
+    if (!currentSession?._id) {
+      toast.error("No active session");
+      return;
+    }
     setLoading(true);
     try {
       if (view === "add") {
-        await axios.post(`${apiUrl}/api/register`, {
-          username: form.name,
-          email: form.email,
-          phone: form.phone,
-          address: form.address,
-          password: form.password,
-          role: "admin",
-          sessionId: currentSession._id,
-        }, { headers: authHeaders() });
+        await axios.post(
+          `${apiUrl}/api/register`,
+          {
+            username: form.name,
+            email: form.email,
+            phone: form.phone,
+            address: form.address,
+            password: form.password,
+            role: "admin",
+            sessionId: currentSession._id,
+          },
+          { headers: authHeaders() },
+        );
         toast.success("Admin created successfully");
       } else if (view === "edit" && selectedAdmin?._id) {
-        await axios.put(`${apiUrl}/api/admin/${selectedAdmin._id}`, {
-          username: form.name,
-          email: form.email,
-          phone: form.phone,
-          address: form.address,
-          ...(form.password ? { password: form.password } : {}),
-        }, { headers: authHeaders() });
+        await axios.put(
+          `${apiUrl}/api/admin/${selectedAdmin._id}`,
+          {
+            username: form.name,
+            email: form.email,
+            phone: form.phone,
+            address: form.address,
+            ...(form.password ? { password: form.password } : {}),
+          },
+          { headers: authHeaders() },
+        );
         toast.success("Admin updated successfully");
       }
       await reFetch();
@@ -97,7 +116,9 @@ const Admin = () => {
       setSelectedAdmin(null);
       setForm({ name: "", email: "", phone: "", address: "", password: "" });
     } catch {
-      toast.error(view === "add" ? "Failed to create admin" : "Failed to update admin");
+      toast.error(
+        view === "add" ? "Failed to create admin" : "Failed to update admin",
+      );
     } finally {
       setLoading(false);
     }
@@ -107,7 +128,9 @@ const Admin = () => {
     if (!selectedAdmin?._id) return;
     setLoading(true);
     try {
-      await axios.delete(`${apiUrl}/api/users/${selectedAdmin._id}`, { headers: authHeaders() });
+      await axios.delete(`${apiUrl}/api/users/${selectedAdmin._id}`, {
+        headers: authHeaders(),
+      });
       toast.success("Admin deleted successfully");
       await reFetch();
     } catch {
@@ -127,51 +150,72 @@ const Admin = () => {
           type={view === "add" ? "add" : "edit"}
           loading={loading}
           onSubmit={handleFormSubmit}
-          onClose={() => { setView("list"); setSelectedAdmin(null); }}>
+          onClose={() => {
+            setView("list");
+            setSelectedAdmin(null);
+          }}>
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-slate-400">Full Name</Label>
+            <Label className="text-[10px] font-bold uppercase text-slate-400">
+              Full Name
+            </Label>
             <Input
               value={form.name}
-              onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               placeholder="Enter full name"
               required
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-slate-400">Email Address</Label>
+            <Label className="text-[10px] font-bold uppercase text-slate-400">
+              Email Address
+            </Label>
             <Input
               type="email"
               value={form.email}
-              onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, email: e.target.value }))
+              }
               placeholder="admin@school.com"
               required
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-slate-400">Phone Number</Label>
+            <Label className="text-[10px] font-bold uppercase text-slate-400">
+              Phone Number
+            </Label>
             <Input
               value={form.phone}
-              onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, phone: e.target.value }))
+              }
               placeholder="080..."
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-slate-400">Address</Label>
+            <Label className="text-[10px] font-bold uppercase text-slate-400">
+              Address
+            </Label>
             <Input
               value={form.address}
-              onChange={(e) => setForm(f => ({ ...f, address: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, address: e.target.value }))
+              }
               placeholder="Home address"
             />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label className="text-[10px] font-bold uppercase text-slate-400">
-              {view === "edit" ? "New Password (leave blank to keep)" : "Account Password"}
+              {view === "edit"
+                ? "New Password (leave blank to keep)"
+                : "Account Password"}
             </Label>
             <div className="relative">
               <Input
                 type={showPassword ? "text" : "password"}
                 value={form.password}
-                onChange={(e) => setForm(f => ({ ...f, password: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, password: e.target.value }))
+                }
                 placeholder="Min 6 characters"
                 minLength={view === "add" ? 6 : undefined}
                 required={view === "add"}
@@ -180,7 +224,7 @@ const Admin = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#004aaa]">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#180154]">
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
@@ -194,10 +238,16 @@ const Admin = () => {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-[#004aaa]">Admin Management</h2>
-          <p className="text-sm text-slate-500">View and manage system administrators.</p>
+          <h2 className="text-2xl font-bold text-[#180154]">
+            Admin Management
+          </h2>
+          <p className="text-sm text-slate-500">
+            View and manage system administrators.
+          </p>
         </div>
-        <Button onClick={handleAdd} className="bg-[#004aaa] gap-2 hover:bg-[#004aaa]/90">
+        <Button
+          onClick={handleAdd}
+          className="bg-[#180154] gap-2 hover:bg-[#180154]/90">
           <Plus size={16} /> Add Admin
         </Button>
       </div>
@@ -207,35 +257,67 @@ const Admin = () => {
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow>
-                <TableHead className="w-[60px] pl-6 text-[#004aaa] font-bold uppercase text-xs">S/N</TableHead>
-                <TableHead className="text-[#004aaa] font-bold uppercase text-xs">Name</TableHead>
-                <TableHead className="text-[#004aaa] font-bold uppercase text-xs">Email</TableHead>
-                <TableHead className="text-[#004aaa] font-bold uppercase text-xs">Phone</TableHead>
-                <TableHead className="text-right pr-6 text-[#004aaa] font-bold uppercase text-xs">Action</TableHead>
+                <TableHead className="w-[60px] pl-6 text-[#180154] font-bold uppercase text-xs">
+                  S/N
+                </TableHead>
+                <TableHead className="text-[#180154] font-bold uppercase text-xs">
+                  Name
+                </TableHead>
+                <TableHead className="text-[#180154] font-bold uppercase text-xs">
+                  Email
+                </TableHead>
+                <TableHead className="text-[#180154] font-bold uppercase text-xs">
+                  Phone
+                </TableHead>
+                <TableHead className="text-right pr-6 text-[#180154] font-bold uppercase text-xs">
+                  Action
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {listLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-12 text-center text-slate-500">Loading admins…</TableCell>
+                  <TableCell
+                    colSpan={5}
+                    className="py-12 text-center text-slate-500">
+                    Loading admins…
+                  </TableCell>
                 </TableRow>
               ) : error ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-8 text-center text-sm text-destructive">Failed to load admins.</TableCell>
+                  <TableCell
+                    colSpan={5}
+                    className="py-8 text-center text-sm text-destructive">
+                    Failed to load admins.
+                  </TableCell>
                 </TableRow>
               ) : currentAdmins.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-12 text-center text-slate-500">No admins found for this session.</TableCell>
+                  <TableCell
+                    colSpan={5}
+                    className="py-12 text-center text-slate-500">
+                    No admins found for this session.
+                  </TableCell>
                 </TableRow>
               ) : (
                 currentAdmins.map((admin, index) => (
-                  <TableRow key={String(admin._id || index)} className="hover:bg-slate-50/50">
-                    <TableCell className="pl-6 text-slate-400">{indexOfFirstItem + index + 1}</TableCell>
-                    <TableCell className="font-bold text-[#004aaa]">
-                      {(admin.username as string) || (admin.name as string) || "—"}
+                  <TableRow
+                    key={String(admin._id || index)}
+                    className="hover:bg-slate-50/50">
+                    <TableCell className="pl-6 text-slate-400">
+                      {indexOfFirstItem + index + 1}
                     </TableCell>
-                    <TableCell className="text-slate-600">{(admin.email as string) || "—"}</TableCell>
-                    <TableCell className="text-slate-600">{(admin.phone as string) || "—"}</TableCell>
+                    <TableCell className="font-bold text-[#180154]">
+                      {(admin.username as string) ||
+                        (admin.name as string) ||
+                        "—"}
+                    </TableCell>
+                    <TableCell className="text-slate-600">
+                      {(admin.email as string) || "—"}
+                    </TableCell>
+                    <TableCell className="text-slate-600">
+                      {(admin.phone as string) || "—"}
+                    </TableCell>
                     <TableCell className="text-right pr-6 space-x-2">
                       <Button
                         variant="ghost"
@@ -247,7 +329,10 @@ const Admin = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => { setSelectedAdmin(admin); setIsDeleteModalOpen(true); }}
+                        onClick={() => {
+                          setSelectedAdmin(admin);
+                          setIsDeleteModalOpen(true);
+                        }}
                         className="text-red-600 hover:bg-red-50">
                         <Trash2 size={16} />
                       </Button>
@@ -273,7 +358,10 @@ const Admin = () => {
         isOpen={isDeleteModalOpen}
         itemName={(selectedAdmin?.username || selectedAdmin?.name) as string}
         loading={loading}
-        onClose={() => { setIsDeleteModalOpen(false); setSelectedAdmin(null); }}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setSelectedAdmin(null);
+        }}
         onConfirm={handleDelete}
       />
     </div>

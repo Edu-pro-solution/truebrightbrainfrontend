@@ -22,8 +22,13 @@ export default function QuestionsGenerator() {
   const { user } = useAuth();
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-  const { data: classesRaw } = useFetch(currentSession?._id ? `/class/${currentSession._id}` : null);
-  const classes = useMemo(() => Array.isArray(classesRaw) ? classesRaw as any[] : [], [classesRaw]);
+  const { data: classesRaw } = useFetch(
+    currentSession?._id ? `/class/${currentSession._id}` : null,
+  );
+  const classes = useMemo(
+    () => (Array.isArray(classesRaw) ? (classesRaw as any[]) : []),
+    [classesRaw],
+  );
 
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
@@ -37,9 +42,12 @@ export default function QuestionsGenerator() {
   const { data: subjectsRaw } = useFetch(
     selectedClass && currentSession?._id
       ? `/get-subject/${encodeURIComponent(selectedClass)}/${currentSession._id}`
-      : null
+      : null,
   );
-  const subjects = useMemo(() => Array.isArray(subjectsRaw) ? subjectsRaw as any[] : [], [subjectsRaw]);
+  const subjects = useMemo(
+    () => (Array.isArray(subjectsRaw) ? (subjectsRaw as any[]) : []),
+    [subjectsRaw],
+  );
 
   const authHeaders = () => {
     const token = localStorage.getItem("jwtToken");
@@ -50,8 +58,16 @@ export default function QuestionsGenerator() {
     `${selectedClass || "class"}-${selectedSubject || "subject"}-${topic || "questions"}.docx`;
 
   const handleGenerate = async () => {
-    if (!selectedClass || !selectedSubject || !topic.trim() || !difficulty || !numberOfQuestions) {
-      toast.error("Please fill in class, subject, topic, difficulty, and number of questions");
+    if (
+      !selectedClass ||
+      !selectedSubject ||
+      !topic.trim() ||
+      !difficulty ||
+      !numberOfQuestions
+    ) {
+      toast.error(
+        "Please fill in class, subject, topic, difficulty, and number of questions",
+      );
       return;
     }
     setLoading(true);
@@ -63,7 +79,8 @@ export default function QuestionsGenerator() {
       const res = await axios.post(
         `${apiUrl}/api/generate-gen-question`,
         {
-          fullname: currentUser?.name || currentUser?.username || "ClassMark User",
+          fullname:
+            currentUser?.name || currentUser?.username || "ClassMark User",
           email: currentUser?.email || "no-email@classmark.local",
           topic,
           difficulty,
@@ -73,7 +90,7 @@ export default function QuestionsGenerator() {
           subject: selectedSubject,
           preview: true,
         },
-        { headers: authHeaders() }
+        { headers: authHeaders() },
       );
       const qs = Array.isArray(res.data?.questions) ? res.data.questions : [];
       setQuestions(qs);
@@ -96,13 +113,20 @@ export default function QuestionsGenerator() {
     const body = questions
       .map((q: any, index: number) => {
         const options = Array.isArray(q.options)
-          ? q.options.map((option: string, optionIndex: number) => `${String.fromCharCode(65 + optionIndex)}. ${option}`).join("\n")
+          ? q.options
+              .map(
+                (option: string, optionIndex: number) =>
+                  `${String.fromCharCode(65 + optionIndex)}. ${option}`,
+              )
+              .join("\n")
           : "";
         return [
           `${index + 1}. ${q.questionText || q.text || String(q)}`,
           options,
           q.correctAnswer ? `Answer: ${q.correctAnswer}` : "",
-        ].filter(Boolean).join("\n");
+        ]
+          .filter(Boolean)
+          .join("\n");
       })
       .join("\n\n");
 
@@ -118,7 +142,7 @@ export default function QuestionsGenerator() {
     <Card className="w-full border-slate-200 shadow-sm">
       <CardHeader className="border-b bg-slate-50/50 py-4">
         <div className="flex items-center gap-2">
-          <BrainCircuit size={18} className="text-[#004aaa]" />
+          <BrainCircuit size={18} className="text-[#180154]" />
           <CardTitle className="text-lg font-bold text-black">
             Questions Generator
           </CardTitle>
@@ -128,27 +152,43 @@ export default function QuestionsGenerator() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-black">Class</label>
-              <Select value={selectedClass} onValueChange={(v) => { setSelectedClass(v); setSelectedSubject(""); }}>
+              <label className="text-xs font-bold uppercase tracking-wider text-black">
+                Class
+              </label>
+              <Select
+                value={selectedClass}
+                onValueChange={(v) => {
+                  setSelectedClass(v);
+                  setSelectedSubject("");
+                }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select class" />
                 </SelectTrigger>
                 <SelectContent>
                   {classes.map((c: any) => (
-                    <SelectItem key={c._id} value={String(c.name || "")}>{String(c.name || "—")}</SelectItem>
+                    <SelectItem key={c._id} value={String(c.name || "")}>
+                      {String(c.name || "—")}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-black">Subject / Field</label>
-              <Select value={selectedSubject} onValueChange={setSelectedSubject} disabled={!selectedClass}>
+              <label className="text-xs font-bold uppercase tracking-wider text-black">
+                Subject / Field
+              </label>
+              <Select
+                value={selectedSubject}
+                onValueChange={setSelectedSubject}
+                disabled={!selectedClass}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select subject" />
                 </SelectTrigger>
                 <SelectContent>
                   {subjects.map((s: any) => (
-                    <SelectItem key={s._id} value={String(s.subjectName || s.name || "")}>
+                    <SelectItem
+                      key={s._id}
+                      value={String(s.subjectName || s.name || "")}>
                       {String(s.subjectName || s.name || "—")}
                     </SelectItem>
                   ))}
@@ -159,7 +199,9 @@ export default function QuestionsGenerator() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-black">Topic</label>
+              <label className="text-xs font-bold uppercase tracking-wider text-black">
+                Topic
+              </label>
               <Input
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
@@ -206,7 +248,11 @@ export default function QuestionsGenerator() {
                 onClick={handleGenerate}
                 disabled={loading}
                 className="gap-2 text-sm">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <BrainCircuit size={14} />}
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <BrainCircuit size={14} />
+                )}
                 Generate
               </Button>
               {questions.length > 0 && (
@@ -225,25 +271,35 @@ export default function QuestionsGenerator() {
           <div className="min-h-[250px] w-full bg-muted rounded-lg border-2 border-dashed border-black p-4 overflow-y-auto max-h-[400px]">
             {questions.length === 0 ? (
               <div className="flex h-full items-center justify-center text-center space-y-2 flex-col">
-                <p className="font-medium text-black">No questions generated yet.</p>
-                <p className="text-xs text-muted-foreground">Fill in the fields above and click Generate.</p>
+                <p className="font-medium text-black">
+                  No questions generated yet.
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Fill in the fields above and click Generate.
+                </p>
               </div>
             ) : (
               <ol className="space-y-4">
                 {questions.map((q: any, i: number) => (
                   <li key={i} className="text-sm text-black">
-                    <p className="font-semibold">{i + 1}. {q.questionText || q.text || String(q)}</p>
+                    <p className="font-semibold">
+                      {i + 1}. {q.questionText || q.text || String(q)}
+                    </p>
                     {q.options && q.options.length > 0 && (
                       <ul className="mt-1 ml-4 space-y-1">
                         {q.options.map((opt: string, j: number) => (
-                          <li key={j} className={`text-xs ${opt === q.correctAnswer ? "font-bold text-primary" : "text-black"}`}>
+                          <li
+                            key={j}
+                            className={`text-xs ${opt === q.correctAnswer ? "font-bold text-primary" : "text-black"}`}>
                             {String.fromCharCode(65 + j)}. {opt}
                           </li>
                         ))}
                       </ul>
                     )}
                     {q.correctAnswer && (
-                      <p className="mt-1 text-xs font-bold text-primary">Answer: {q.correctAnswer}</p>
+                      <p className="mt-1 text-xs font-bold text-primary">
+                        Answer: {q.correctAnswer}
+                      </p>
                     )}
                   </li>
                 ))}

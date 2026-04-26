@@ -11,43 +11,69 @@ const MarkSheet = () => {
   const { currentSession } = useContext(SessionContext);
 
   const { data: raw } = useFetch(
-    id && currentSession?._id ? `/get-students/${id}/${currentSession._id}` : null
+    id && currentSession?._id
+      ? `/get-students/${id}/${currentSession._id}`
+      : null,
   );
-  const student = raw ? (Array.isArray(raw) ? (raw as any[])[0] : raw as any) : null;
+  const student = raw
+    ? Array.isArray(raw)
+      ? (raw as any[])[0]
+      : (raw as any)
+    : null;
   const studentName = student?.studentName || student?.name || "Student";
   const studentClass = student?.classname || "";
 
   const reportCards = [
-    { title: "First Term Report Card",  route: `/dashboard/first_term_report_card/${id}` },
-    { title: "Second Term Report Card", route: `/dashboard/term_report_card/${id}` },
-    { title: "Third Term Report Card",  route: `/dashboard/third_term_report_card/${id}` },
-    { title: "Cumulative Result",        route: `/dashboard/cumulative/${id}` },
+    {
+      title: "First Term Report Card",
+      route: `/dashboard/first_term_report_card/${id}`,
+    },
+    {
+      title: "Second Term Report Card",
+      route: `/dashboard/term_report_card/${id}`,
+    },
+    {
+      title: "Third Term Report Card",
+      route: `/dashboard/third_term_report_card/${id}`,
+    },
+    { title: "Cumulative Result", route: `/dashboard/cumulative/${id}` },
   ];
 
   return (
     <div className="p-6 space-y-6">
-      <Link to={-1 as any} className="flex items-center gap-2 text-slate-500 hover:text-[#004aaa] transition-colors">
+      <Link
+        to={-1 as any}
+        className="flex items-center gap-2 text-slate-500 hover:text-[#180154] transition-colors">
         <ArrowLeft size={18} /> Back to List
       </Link>
 
       <header>
-        <h2 className="text-2xl font-bold text-[#004aaa]">Academic Marksheet</h2>
+        <h2 className="text-2xl font-bold text-[#180154]">
+          Academic Marksheet
+        </h2>
         <p className="text-slate-500">
-          Student: <span className="font-bold text-[#004aaa]">{studentName}</span>
-          {studentClass && <span className="text-slate-400"> · {studentClass}</span>}
+          Student:{" "}
+          <span className="font-bold text-[#180154]">{studentName}</span>
+          {studentClass && (
+            <span className="text-slate-400"> · {studentClass}</span>
+          )}
         </p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
         {reportCards.map((card) => (
-          <Card key={card.title} className="border-none shadow-sm ring-1 ring-slate-200 hover:ring-[#004aaa] transition-all group">
+          <Card
+            key={card.title}
+            className="border-none shadow-sm ring-1 ring-slate-200 hover:ring-[#180154] transition-all group">
             <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
-              <div className="p-4 bg-slate-50 rounded-full text-[#004aaa] group-hover:bg-[#004aaa] group-hover:text-white transition-colors">
+              <div className="p-4 bg-slate-50 rounded-full text-[#180154] group-hover:bg-[#180154] group-hover:text-white transition-colors">
                 <FileBarChart size={32} />
               </div>
-              <h3 className="font-bold text-[#004aaa] text-lg">{card.title}</h3>
+              <h3 className="font-bold text-[#180154] text-lg">{card.title}</h3>
               <Link to={card.route} className="w-full">
-                <Button className="w-full bg-[#004aaa] hover:bg-[#004aaa]/90">View Report</Button>
+                <Button className="w-full bg-[#180154] hover:bg-[#180154]/90">
+                  View Report
+                </Button>
               </Link>
             </CardContent>
           </Card>

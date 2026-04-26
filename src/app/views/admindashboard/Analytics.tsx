@@ -15,17 +15,26 @@ type StatCard = {
   href: string;
 };
 
-const countItems = (value: unknown) => (Array.isArray(value) ? value.length : 0);
+const countItems = (value: unknown) =>
+  Array.isArray(value) ? value.length : 0;
 
 export default function Dashboard() {
   const { currentSession } = useContext(SessionContext);
   const navigate = useNavigate();
   const sessionId = currentSession?._id;
 
-  const { data: rawStudents } = useFetch(sessionId ? `/users/student/${sessionId}` : null);
-  const { data: rawTeachers } = useFetch(sessionId ? `/users/teacher/${sessionId}` : null);
-  const { data: rawParents } = useFetch(sessionId ? `/users/parent/${sessionId}` : null);
-  const { data: notices } = useFetch(sessionId ? `/get-all-notices/${sessionId}` : null);
+  const { data: rawStudents } = useFetch(
+    sessionId ? `/users/student/${sessionId}` : null,
+  );
+  const { data: rawTeachers } = useFetch(
+    sessionId ? `/users/teacher/${sessionId}` : null,
+  );
+  const { data: rawParents } = useFetch(
+    sessionId ? `/users/parent/${sessionId}` : null,
+  );
+  const { data: notices } = useFetch(
+    sessionId ? `/get-all-notices/${sessionId}` : null,
+  );
 
   const stats = useMemo<StatCard[]>(
     () => [
@@ -58,7 +67,7 @@ export default function Dashboard() {
         href: "/notices",
       },
     ],
-    [notices, rawParents, rawStudents, rawTeachers]
+    [notices, rawParents, rawStudents, rawTeachers],
   );
 
   const latestNotices = Array.isArray(notices) ? notices.slice(0, 3) : [];
@@ -68,7 +77,7 @@ export default function Dashboard() {
       <div className="rounded-2xl border border-black bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#004aaa]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#180154]">
               Admin Dashboard
             </p>
             <h1 className="text-3xl font-bold text-black">School Overview</h1>
@@ -76,9 +85,13 @@ export default function Dashboard() {
               Session: {currentSession?.name || "No active session selected"}
             </p>
           </div>
-          <div className="rounded-xl border border-black bg-[#004aaa] px-4 py-3 text-white">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em]">Current Session</p>
-            <p className="text-lg font-bold">{currentSession?.name || "Not Set"}</p>
+          <div className="rounded-xl border border-black bg-[#180154] px-4 py-3 text-white">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em]">
+              Current Session
+            </p>
+            <p className="text-lg font-bold">
+              {currentSession?.name || "Not Set"}
+            </p>
           </div>
         </div>
       </div>
@@ -87,16 +100,24 @@ export default function Dashboard() {
         <div className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
             {stats.map((item) => (
-              <Card key={item.title} className="border border-black bg-white shadow-sm">
+              <Card
+                key={item.title}
+                className="border border-black bg-white shadow-sm">
                 <CardContent className="flex items-center justify-between p-6">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-black bg-[#004aaa] text-white">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-black bg-[#180154] text-white">
                       <item.icon className="h-6 w-6" />
                     </div>
                     <div>
-                      <p className="text-3xl font-bold text-black">{item.value}</p>
-                      <p className="text-sm font-semibold text-black">{item.title}</p>
-                      <p className="text-xs uppercase tracking-[0.18em] text-[#004aaa]">{item.subtitle}</p>
+                      <p className="text-3xl font-bold text-black">
+                        {item.value}
+                      </p>
+                      <p className="text-sm font-semibold text-black">
+                        {item.title}
+                      </p>
+                      <p className="text-xs uppercase tracking-[0.18em] text-[#180154]">
+                        {item.subtitle}
+                      </p>
                     </div>
                   </div>
                   <Button
@@ -104,8 +125,7 @@ export default function Dashboard() {
                     variant="outline"
                     size="icon"
                     onClick={() => navigate(item.href)}
-                    className="h-10 w-10 border-black text-[#004aaa] hover:bg-[#004aaa] hover:text-white"
-                  >
+                    className="h-10 w-10 border-black text-[#180154] hover:bg-[#180154] hover:text-white">
                     <ArrowRight className="h-5 w-5" />
                   </Button>
                 </CardContent>
@@ -115,26 +135,38 @@ export default function Dashboard() {
 
           <Card className="border border-black bg-white shadow-sm">
             <CardHeader className="border-b border-black">
-              <CardTitle className="text-base font-bold text-[#004aaa]">Recent Notice Board</CardTitle>
+              <CardTitle className="text-base font-bold text-[#180154]">
+                Recent Notice Board
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 p-6">
               {latestNotices.length === 0 ? (
                 <p className="text-sm text-black">No notices yet.</p>
               ) : (
                 latestNotices.map((notice: any) => (
-                  <div key={notice._id || notice.title} className="rounded-xl border border-black bg-white p-4">
+                  <div
+                    key={notice._id || notice.title}
+                    className="rounded-xl border border-black bg-white p-4">
                     <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
                       <div>
-                        <p className="font-bold text-black">{notice.title || "Notice"}</p>
-                        <p className="mt-1 text-sm text-black">
-                          {notice.notice || notice.message || notice.description || "No notice body provided."}
+                        <p className="font-bold text-black">
+                          {notice.title || "Notice"}
                         </p>
-                        <p className="mt-2 text-[11px] font-semibold text-[#004aaa]">
-                          Posted by: {notice.posted_by || notice.postedBy || "Admin"}
+                        <p className="mt-1 text-sm text-black">
+                          {notice.notice ||
+                            notice.message ||
+                            notice.description ||
+                            "No notice body provided."}
+                        </p>
+                        <p className="mt-2 text-[11px] font-semibold text-[#180154]">
+                          Posted by:{" "}
+                          {notice.posted_by || notice.postedBy || "Admin"}
                         </p>
                       </div>
-                      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#004aaa]">
-                        {notice.date ? new Date(notice.date).toLocaleDateString() : "Notice"}
+                      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#180154]">
+                        {notice.date
+                          ? new Date(notice.date).toLocaleDateString()
+                          : "Notice"}
                       </span>
                     </div>
                   </div>
@@ -146,7 +178,9 @@ export default function Dashboard() {
 
         <Card className="border border-black bg-white shadow-sm">
           <CardHeader className="border-b border-black">
-            <CardTitle className="text-base font-bold text-[#004aaa]">Academic Calendar</CardTitle>
+            <CardTitle className="text-base font-bold text-[#180154]">
+              Academic Calendar
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
             <Calendar className="w-full rounded-xl border border-black" />

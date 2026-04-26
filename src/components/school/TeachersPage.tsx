@@ -46,7 +46,7 @@ export default function TeachersPage({
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-[#004aaa]">{title}</h2>
+          <h2 className="text-2xl font-bold text-[#180154]">{title}</h2>
           <p className="text-sm text-slate-500">{description}</p>
         </div>
       </div>
@@ -56,13 +56,17 @@ export default function TeachersPage({
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow>
-                <TableHead className="w-[80px] text-[#004aaa] font-bold pl-6">
+                <TableHead className="w-[80px] text-[#180154] font-bold pl-6">
                   S/N
                 </TableHead>
-                <TableHead className="text-[#004aaa] font-bold">Name</TableHead>
-                <TableHead className="text-[#004aaa] font-bold">Email</TableHead>
-                <TableHead className="text-[#004aaa] font-bold">Phone</TableHead>
-                <TableHead className="text-[#004aaa] font-bold">
+                <TableHead className="text-[#180154] font-bold">Name</TableHead>
+                <TableHead className="text-[#180154] font-bold">
+                  Email
+                </TableHead>
+                <TableHead className="text-[#180154] font-bold">
+                  Phone
+                </TableHead>
+                <TableHead className="text-[#180154] font-bold">
                   Address
                 </TableHead>
               </TableRow>
@@ -72,15 +76,18 @@ export default function TeachersPage({
                 <TableRow>
                   <TableCell colSpan={5} className="py-12 text-center">
                     <div className="inline-flex items-center gap-2 text-slate-500">
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#004aaa] border-t-transparent" />
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#180154] border-t-transparent" />
                       Loading teachers...
                     </div>
                   </TableCell>
                 </TableRow>
               ) : error ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-8 text-center text-sm text-destructive">
-                    Could not load teachers. Check your session and API connection.
+                  <TableCell
+                    colSpan={5}
+                    className="py-8 text-center text-sm text-destructive">
+                    Could not load teachers. Check your session and API
+                    connection.
                   </TableCell>
                 </TableRow>
               ) : teachers.length === 0 ? (
@@ -98,12 +105,11 @@ export default function TeachersPage({
                 teachers.map((teacher, index) => (
                   <TableRow
                     key={teacher._id || teacher.id || index}
-                    className="hover:bg-slate-50/50"
-                  >
+                    className="hover:bg-slate-50/50">
                     <TableCell className="pl-6 font-medium text-slate-500">
                       {index + 1}
                     </TableCell>
-                    <TableCell className="font-bold text-[#004aaa]">
+                    <TableCell className="font-bold text-[#180154]">
                       {teacher.username || teacher.name || "Unnamed Teacher"}
                     </TableCell>
                     <TableCell className="text-blue-600 font-medium">

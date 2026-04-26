@@ -83,19 +83,26 @@ const toDateInputValue = (value?: string) => {
   return date.toISOString().split("T")[0];
 };
 
-const getExamTitle = (exam: any) => exam?.title || exam?.examTitle || exam?.name || "Untitled Exam";
-const getExamPassPercent = (exam: any) => Number(exam?.percent ?? exam?.passPercentage ?? exam?.passMark ?? 40);
-const getExamTotalMarks = (exam: any) => Number(exam?.totalMark ?? exam?.totalMarks ?? exam?.mark ?? 0);
+const getExamTitle = (exam: any) =>
+  exam?.title || exam?.examTitle || exam?.name || "Untitled Exam";
+const getExamPassPercent = (exam: any) =>
+  Number(exam?.percent ?? exam?.passPercentage ?? exam?.passMark ?? 40);
+const getExamTotalMarks = (exam: any) =>
+  Number(exam?.totalMark ?? exam?.totalMarks ?? exam?.mark ?? 0);
 
 export default function ManageOnlineExams() {
   const { currentSession } = useContext(SessionContext);
   const { toast } = useToast();
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-  const { data: examsData, loading: examsLoading, reFetch } = useFetch(
-    currentSession ? `/get-exam/${currentSession._id}` : null
+  const {
+    data: examsData,
+    loading: examsLoading,
+    reFetch,
+  } = useFetch(currentSession ? `/get-exam/${currentSession._id}` : null);
+  const { data: classesData } = useFetch(
+    currentSession ? `/class/${currentSession._id}` : null,
   );
-  const { data: classesData } = useFetch(currentSession ? `/class/${currentSession._id}` : null);
 
   const exams = Array.isArray(examsData) ? examsData : [];
   const classes = Array.isArray(classesData) ? classesData : [];
@@ -110,7 +117,9 @@ export default function ManageOnlineExams() {
   const itemsPerPage = 10;
 
   const { data: subjectsData } = useFetch(
-    form.className && currentSession ? `/get-subject/${encodeURIComponent(form.className)}/${currentSession._id}` : null
+    form.className && currentSession
+      ? `/get-subject/${encodeURIComponent(form.className)}/${currentSession._id}`
+      : null,
   );
   const subjects = Array.isArray(subjectsData) ? subjectsData : [];
 
@@ -133,7 +142,9 @@ export default function ManageOnlineExams() {
         date: toDateInputValue(exam.date || exam.examDate),
         fromTime: exam.fromTime || exam.startTime || "",
         toTime: exam.toTime || exam.endTime || "",
-        percent: String(exam.percent ?? exam.passPercentage ?? exam.passMark ?? 40),
+        percent: String(
+          exam.percent ?? exam.passPercentage ?? exam.passMark ?? 40,
+        ),
         instruction: exam.instruction || "",
       });
       setView("edit");
@@ -148,15 +159,22 @@ export default function ManageOnlineExams() {
   const fetchResults = async (exam: any) => {
     setLoading(true);
     try {
-      const res = await axios.get(`${apiUrl}/api/exams/all-scores/${exam._id}`, {
-        headers: authHeaders(),
-      });
+      const res = await axios.get(
+        `${apiUrl}/api/exams/all-scores/${exam._id}`,
+        {
+          headers: authHeaders(),
+        },
+      );
       setSelectedExam(exam);
       setExamResults(Array.isArray(res.data) ? res.data : []);
       setView("results");
     } catch (error) {
       console.error("Error fetching results:", error);
-      toast({ title: "Error", description: "Failed to fetch exam results.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to fetch exam results.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -181,10 +199,19 @@ export default function ManageOnlineExams() {
       };
 
       if (view === "add") {
-        await axios.post(`${apiUrl}/api/create-exam`, payload, { headers: authHeaders() });
-        toast({ title: "Success", description: "Online exam created successfully." });
+        await axios.post(`${apiUrl}/api/create-exam`, payload, {
+          headers: authHeaders(),
+        });
+        toast({
+          title: "Success",
+          description: "Online exam created successfully.",
+        });
       } else if (view === "edit" && selectedExam?._id) {
-        await axios.put(`${apiUrl}/api/edit-exam/${selectedExam._id}`, payload, { headers: authHeaders() });
+        await axios.put(
+          `${apiUrl}/api/edit-exam/${selectedExam._id}`,
+          payload,
+          { headers: authHeaders() },
+        );
         toast({ title: "Success", description: "Exam updated successfully." });
       }
 
@@ -194,7 +221,11 @@ export default function ManageOnlineExams() {
       reFetch();
     } catch (error) {
       console.error("Error saving exam:", error);
-      toast({ title: "Error", description: "Failed to save exam.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to save exam.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -204,24 +235,33 @@ export default function ManageOnlineExams() {
     if (!selectedExam?._id) return;
     setLoading(true);
     try {
-      await axios.delete(`${apiUrl}/api/exam/${selectedExam._id}`, { headers: authHeaders() });
+      await axios.delete(`${apiUrl}/api/exam/${selectedExam._id}`, {
+        headers: authHeaders(),
+      });
       toast({ title: "Success", description: "Exam deleted successfully." });
       setIsDeleteOpen(false);
       setSelectedExam(null);
       reFetch();
     } catch (error) {
       console.error("Error deleting exam:", error);
-      toast({ title: "Error", description: "Failed to delete exam.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to delete exam.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const handleSaveQuestions = () => {
-    toast({ title: "Saved", description: "Question updates have been handled." });
+    toast({
+      title: "Saved",
+      description: "Question updates have been handled.",
+    });
   };
 
-  if ((view === "add" || view === "edit")) {
+  if (view === "add" || view === "edit") {
     return (
       <div className="p-6">
         <FormShell
@@ -232,36 +272,59 @@ export default function ManageOnlineExams() {
           onClose={() => {
             setView("list");
             setSelectedExam(null);
-          }}
-        >
+          }}>
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Exam Title</Label>
-            <Input value={form.title} onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))} required />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Exam Title
+            </Label>
+            <Input
+              value={form.title}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, title: e.target.value }))
+              }
+              required
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Class Name</Label>
-            <Select value={form.className} onValueChange={(value) => setForm((prev) => ({ ...prev, className: value, subject: "" }))}>
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Class Name
+            </Label>
+            <Select
+              value={form.className}
+              onValueChange={(value) =>
+                setForm((prev) => ({ ...prev, className: value, subject: "" }))
+              }>
               <SelectTrigger className="border-black">
                 <SelectValue placeholder="Select class" />
               </SelectTrigger>
               <SelectContent>
                 {classes.map((cls: any) => (
-                  <SelectItem key={cls._id} value={cls.name}>{cls.name}</SelectItem>
+                  <SelectItem key={cls._id} value={cls.name}>
+                    {cls.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Subject</Label>
-            <Select value={form.subject} onValueChange={(value) => setForm((prev) => ({ ...prev, subject: value }))}>
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Subject
+            </Label>
+            <Select
+              value={form.subject}
+              onValueChange={(value) =>
+                setForm((prev) => ({ ...prev, subject: value }))
+              }>
               <SelectTrigger className="border-black">
                 <SelectValue placeholder="Select subject" />
               </SelectTrigger>
               <SelectContent>
                 {subjects.map((subject: any) => (
-                  <SelectItem key={subject._id} value={subject.subjectName || subject.name}>
+                  <SelectItem
+                    key={subject._id}
+                    value={subject.subjectName || subject.name}>
                     {subject.subjectName || subject.name}
                   </SelectItem>
                 ))}
@@ -270,28 +333,73 @@ export default function ManageOnlineExams() {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Exam Date</Label>
-            <Input type="date" value={form.date} onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))} required />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Exam Date
+            </Label>
+            <Input
+              type="date"
+              value={form.date}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, date: e.target.value }))
+              }
+              required
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Start Time</Label>
-            <Input type="time" value={form.fromTime} onChange={(e) => setForm((prev) => ({ ...prev, fromTime: e.target.value }))} required />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Start Time
+            </Label>
+            <Input
+              type="time"
+              value={form.fromTime}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, fromTime: e.target.value }))
+              }
+              required
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">End Time</Label>
-            <Input type="time" value={form.toTime} onChange={(e) => setForm((prev) => ({ ...prev, toTime: e.target.value }))} required />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              End Time
+            </Label>
+            <Input
+              type="time"
+              value={form.toTime}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, toTime: e.target.value }))
+              }
+              required
+            />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Pass Percentage</Label>
-            <Input type="number" value={form.percent} onChange={(e) => setForm((prev) => ({ ...prev, percent: e.target.value }))} min={0} max={100} />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Pass Percentage
+            </Label>
+            <Input
+              type="number"
+              value={form.percent}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, percent: e.target.value }))
+              }
+              min={0}
+              max={100}
+            />
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <Label className="text-[10px] font-bold uppercase text-black">Instructions</Label>
-            <Textarea value={form.instruction} onChange={(e) => setForm((prev) => ({ ...prev, instruction: e.target.value }))} className="min-h-[120px] border-black" />
+            <Label className="text-[10px] font-bold uppercase text-black">
+              Instructions
+            </Label>
+            <Textarea
+              value={form.instruction}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, instruction: e.target.value }))
+              }
+              className="min-h-[120px] border-black"
+            />
           </div>
         </FormShell>
       </div>
@@ -316,47 +424,79 @@ export default function ManageOnlineExams() {
     return (
       <div className="space-y-6 p-6">
         <div className="flex items-center justify-between gap-4 print:hidden">
-          <Button variant="ghost" onClick={() => { setView("list"); setSelectedExam(null); }} className="gap-2 text-black hover:text-primary">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setView("list");
+              setSelectedExam(null);
+            }}
+            className="gap-2 text-black hover:text-primary">
             <ArrowLeft size={16} /> Back to Manage Online Exams
           </Button>
-          <Button variant="outline" onClick={() => window.print()} className="gap-2 border-black text-black hover:bg-primary/10">
+          <Button
+            variant="outline"
+            onClick={() => window.print()}
+            className="gap-2 border-black text-black hover:bg-primary/10">
             <Printer size={16} /> Print Result
           </Button>
         </div>
 
         <Card className="printable-area overflow-hidden border border-black shadow-sm">
           <CardHeader className="border-b border-black bg-white">
-            <CardTitle className="text-lg font-bold text-primary">View Result</CardTitle>
+            <CardTitle className="text-lg font-bold text-primary">
+              View Result
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-8">
             <div className="grid gap-6 md:grid-cols-2">
               <div className="rounded-xl border border-black p-4">
-                <p className="text-xs font-bold uppercase text-black">Exam Title</p>
-                <p className="font-semibold text-primary">{getExamTitle(selectedExam)}</p>
+                <p className="text-xs font-bold uppercase text-black">
+                  Exam Title
+                </p>
+                <p className="font-semibold text-primary">
+                  {getExamTitle(selectedExam)}
+                </p>
               </div>
               <div className="rounded-xl border border-black p-4">
                 <p className="text-xs font-bold uppercase text-black">Date</p>
-                <p className="font-semibold text-primary">{formatExamDate(selectedExam.date || selectedExam.examDate)}</p>
+                <p className="font-semibold text-primary">
+                  {formatExamDate(selectedExam.date || selectedExam.examDate)}
+                </p>
               </div>
               <div className="rounded-xl border border-black p-4">
                 <p className="text-xs font-bold uppercase text-black">Class</p>
-                <p className="font-semibold text-primary">{selectedExam.className || selectedExam.class || "—"}</p>
+                <p className="font-semibold text-primary">
+                  {selectedExam.className || selectedExam.class || "—"}
+                </p>
               </div>
               <div className="rounded-xl border border-black p-4">
                 <p className="text-xs font-bold uppercase text-black">Time</p>
-                <p className="font-semibold text-primary">{selectedExam.fromTime || selectedExam.startTime} - {selectedExam.toTime || selectedExam.endTime}</p>
+                <p className="font-semibold text-primary">
+                  {selectedExam.fromTime || selectedExam.startTime} -{" "}
+                  {selectedExam.toTime || selectedExam.endTime}
+                </p>
               </div>
               <div className="rounded-xl border border-black p-4">
-                <p className="text-xs font-bold uppercase text-black">Subject</p>
-                <p className="font-semibold text-primary">{selectedExam.subject || selectedExam.subjectName || "—"}</p>
+                <p className="text-xs font-bold uppercase text-black">
+                  Subject
+                </p>
+                <p className="font-semibold text-primary">
+                  {selectedExam.subject || selectedExam.subjectName || "—"}
+                </p>
               </div>
               <div className="rounded-xl border border-black p-4">
-                <p className="text-xs font-bold uppercase text-black">Pass Percentage</p>
+                <p className="text-xs font-bold uppercase text-black">
+                  Pass Percentage
+                </p>
                 <p className="font-semibold text-primary">{passMark}%</p>
               </div>
               <div className="rounded-xl border border-black p-4">
-                <p className="text-xs font-bold uppercase text-black">Instructions</p>
-                <p className="font-semibold text-primary">{selectedExam.instruction || "—"}</p>
+                <p className="text-xs font-bold uppercase text-black">
+                  Instructions
+                </p>
+                <p className="font-semibold text-primary">
+                  {selectedExam.instruction || "—"}
+                </p>
               </div>
             </div>
 
@@ -364,24 +504,42 @@ export default function ManageOnlineExams() {
               <Table>
                 <TableHeader className="bg-primary/10">
                   <TableRow>
-                    <TableHead className="pl-6 font-bold text-primary">Student Name</TableHead>
-                    <TableHead className="text-center font-bold text-primary">Mark Obtained</TableHead>
-                    <TableHead className="pr-6 text-right font-bold text-primary">Result</TableHead>
+                    <TableHead className="pl-6 font-bold text-primary">
+                      Student Name
+                    </TableHead>
+                    <TableHead className="text-center font-bold text-primary">
+                      Mark Obtained
+                    </TableHead>
+                    <TableHead className="pr-6 text-right font-bold text-primary">
+                      Result
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {examResults.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={3} className="py-10 text-center text-black">No results available for this exam.</TableCell>
+                      <TableCell
+                        colSpan={3}
+                        className="py-10 text-center text-black">
+                        No results available for this exam.
+                      </TableCell>
                     </TableRow>
                   ) : (
                     examResults.map((result: any) => (
-                      <TableRow key={result._id || result.studentId} className="hover:bg-primary/5">
-                        <TableCell className="pl-6 font-medium text-primary">{result.studentName || result.name || "Student"}</TableCell>
-                        <TableCell className="text-center font-semibold text-black">{result.score ?? 0}</TableCell>
+                      <TableRow
+                        key={result._id || result.studentId}
+                        className="hover:bg-primary/5">
+                        <TableCell className="pl-6 font-medium text-primary">
+                          {result.studentName || result.name || "Student"}
+                        </TableCell>
+                        <TableCell className="text-center font-semibold text-black">
+                          {result.score ?? 0}
+                        </TableCell>
                         <TableCell className="pr-6 text-right">
                           <span className="inline-flex rounded-full border border-black bg-primary/10 px-3 py-1 text-[10px] font-bold text-primary">
-                            {Number(result.score ?? 0) >= passMark ? "PASSED" : "FAILED"}
+                            {Number(result.score ?? 0) >= passMark
+                              ? "PASSED"
+                              : "FAILED"}
                           </span>
                         </TableCell>
                       </TableRow>
@@ -400,7 +558,9 @@ export default function ManageOnlineExams() {
     <div className="space-y-6 p-4">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-2xl font-bold text-primary">Manage Online Exams</h2>
-        <Button onClick={() => openForm("add")} className="gap-2 bg-primary hover:bg-primary/90">
+        <Button
+          onClick={() => openForm("add")}
+          className="gap-2 bg-primary hover:bg-primary/90">
           <Plus size={16} /> Add New Exam
         </Button>
       </div>
@@ -410,14 +570,28 @@ export default function ManageOnlineExams() {
           <Table>
             <TableHeader className="bg-primary/10">
               <TableRow>
-                <TableHead className="w-[50px] pl-6"><Checkbox /></TableHead>
-                <TableHead className="w-[60px] font-bold text-primary">S/N</TableHead>
-                <TableHead className="font-bold text-primary">Exam Name</TableHead>
-                <TableHead className="font-bold text-primary">Class Name</TableHead>
-                <TableHead className="font-bold text-primary">Subject</TableHead>
-                <TableHead className="font-bold text-primary">Exam Date</TableHead>
+                <TableHead className="w-[50px] pl-6">
+                  <Checkbox />
+                </TableHead>
+                <TableHead className="w-[60px] font-bold text-primary">
+                  S/N
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  Exam Name
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  Class Name
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  Subject
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  Exam Date
+                </TableHead>
                 <TableHead className="font-bold text-primary">Time</TableHead>
-                <TableHead className="pr-6 text-right font-bold text-primary">Action</TableHead>
+                <TableHead className="pr-6 text-right font-bold text-primary">
+                  Action
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -432,42 +606,72 @@ export default function ManageOnlineExams() {
                 </TableRow>
               ) : currentExams.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="py-10 text-center text-black">No online exams found.</TableCell>
+                  <TableCell
+                    colSpan={8}
+                    className="py-10 text-center text-black">
+                    No online exams found.
+                  </TableCell>
                 </TableRow>
               ) : (
                 currentExams.map((exam, index) => (
                   <TableRow key={exam._id} className="hover:bg-primary/5">
-                    <TableCell className="pl-6"><Checkbox /></TableCell>
-                    <TableCell className="font-medium text-black">{indexOfFirstItem + index + 1}</TableCell>
-                    <TableCell className="font-bold text-primary">{getExamTitle(exam)}</TableCell>
-                    <TableCell className="text-black">{exam.className || exam.class || "—"}</TableCell>
-                    <TableCell className="text-black">{exam.subject || exam.subjectName || "—"}</TableCell>
-                    <TableCell className="text-black">{formatExamDate(exam.date)}</TableCell>
-                    <TableCell className="text-black">{exam.fromTime || exam.startTime} - {exam.toTime || exam.endTime}</TableCell>
+                    <TableCell className="pl-6">
+                      <Checkbox />
+                    </TableCell>
+                    <TableCell className="font-medium text-black">
+                      {indexOfFirstItem + index + 1}
+                    </TableCell>
+                    <TableCell className="font-bold text-primary">
+                      {getExamTitle(exam)}
+                    </TableCell>
+                    <TableCell className="text-black">
+                      {exam.className || exam.class || "—"}
+                    </TableCell>
+                    <TableCell className="text-black">
+                      {exam.subject || exam.subjectName || "—"}
+                    </TableCell>
+                    <TableCell className="text-black">
+                      {formatExamDate(exam.date)}
+                    </TableCell>
+                    <TableCell className="text-black">
+                      {exam.fromTime || exam.startTime} -{" "}
+                      {exam.toTime || exam.endTime}
+                    </TableCell>
                     <TableCell className="px-6 text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-black">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-black">
                             <MoreHorizontal size={18} />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-52">
-                          <DropdownMenuItem className="gap-2" onClick={() => { setSelectedExam(exam); setView("questions"); }}>
+                          <DropdownMenuItem
+                            className="gap-2"
+                            onClick={() => {
+                              setSelectedExam(exam);
+                              setView("questions");
+                            }}>
                             <FileQuestion size={16} /> Manage Questions
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2" onClick={() => fetchResults(exam)}>
+                          <DropdownMenuItem
+                            className="gap-2"
+                            onClick={() => fetchResults(exam)}>
                             <Eye size={16} /> View Result
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2 text-[#004aaa] focus:bg-[#004aaa]/10 focus:text-[#004aaa]" onClick={() => openForm("edit", exam)}>
-                            <Edit3 size={16} className="text-[#004aaa]" /> Edit
+                          <DropdownMenuItem
+                            className="gap-2 text-[#180154] focus:bg-[#180154]/10 focus:text-[#180154]"
+                            onClick={() => openForm("edit", exam)}>
+                            <Edit3 size={16} className="text-[#180154]" /> Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="gap-2 text-red-600 focus:bg-red-50 focus:text-red-600"
                             onClick={() => {
                               setSelectedExam(exam);
                               setIsDeleteOpen(true);
-                            }}
-                          >
+                            }}>
                             <Trash2 size={16} className="text-red-600" /> Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>

@@ -1,7 +1,12 @@
 import { useContext, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/DataTablePagination";
 import useFetch from "@/hooks/useFetch";
@@ -20,15 +25,17 @@ export default function MyClass() {
     return { ...parsed, ...user } as Record<string, any>;
   }, [user]);
 
-  const className = String(userInfo?.classname || userInfo?.className || userInfo?.class || "");
+  const className = String(
+    userInfo?.classname || userInfo?.className || userInfo?.class || "",
+  );
 
   const { data, loading } = useFetch(
     currentSession && className
       ? `/students/${currentSession._id}/${className}`
-      : null
+      : null,
   );
 
-  const students = useMemo(() => Array.isArray(data) ? data : [], [data]);
+  const students = useMemo(() => (Array.isArray(data) ? data : []), [data]);
 
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
@@ -45,10 +52,12 @@ export default function MyClass() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-[#004aaa]">
+        <h2 className="text-2xl font-bold text-[#180154]">
           My Class — {className.toUpperCase()}
         </h2>
-        <p className="text-sm text-slate-500">{students.length} classmate{students.length !== 1 ? "s" : ""}</p>
+        <p className="text-sm text-slate-500">
+          {students.length} classmate{students.length !== 1 ? "s" : ""}
+        </p>
       </div>
 
       <Card className="border-none shadow-sm ring-1 ring-slate-200 overflow-hidden">
@@ -56,30 +65,44 @@ export default function MyClass() {
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow>
-                <TableHead className="pl-6 font-bold text-[#004aaa] w-[60px]">S/N</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Adm No</TableHead>
-                <TableHead className="font-bold text-[#004aaa]">Name</TableHead>
+                <TableHead className="pl-6 font-bold text-[#180154] w-[60px]">
+                  S/N
+                </TableHead>
+                <TableHead className="font-bold text-[#180154]">
+                  Adm No
+                </TableHead>
+                <TableHead className="font-bold text-[#180154]">Name</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center py-10 text-slate-500">
+                  <TableCell
+                    colSpan={3}
+                    className="text-center py-10 text-slate-500">
                     Loading classmates…
                   </TableCell>
                 </TableRow>
               ) : current.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center py-10 text-slate-500">
+                  <TableCell
+                    colSpan={3}
+                    className="text-center py-10 text-slate-500">
                     No classmates found.
                   </TableCell>
                 </TableRow>
               ) : (
                 current.map((s: any, i) => (
                   <TableRow key={s._id} className="hover:bg-slate-50/50">
-                    <TableCell className="pl-6 text-slate-500">{indexOfFirst + i + 1}</TableCell>
-                    <TableCell className="font-medium text-slate-600">{s.AdmNo || "—"}</TableCell>
-                    <TableCell className="font-semibold text-[#004aaa]">{s.studentName || s.name || "—"}</TableCell>
+                    <TableCell className="pl-6 text-slate-500">
+                      {indexOfFirst + i + 1}
+                    </TableCell>
+                    <TableCell className="font-medium text-slate-600">
+                      {s.AdmNo || "—"}
+                    </TableCell>
+                    <TableCell className="font-semibold text-[#180154]">
+                      {s.studentName || s.name || "—"}
+                    </TableCell>
                   </TableRow>
                 ))
               )}
