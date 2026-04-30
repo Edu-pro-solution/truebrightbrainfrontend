@@ -31,6 +31,7 @@ import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { SessionContext } from "@/contexts/SessionContext";
 import useFetch from "@/hooks/useFetch";
+import { toClassRouteParam } from "@/lib/class-utils";
 import logo from "@/assets/logo.png";
 import {
   Sidebar,
@@ -58,7 +59,7 @@ import {
 // ── helpers ──────────────────────────────────────────────────────────────────
 const className = (c: any) => String(c?.name || c?.className || "");
 // Use name string (not _id) — backend routes expect class name, e.g. "JS1"
-const classId = (c: any) => String(c?.name || c?.className || "");
+const classId = (c: any) => toClassRouteParam(c?.name || c?.className || "");
 
 // ── nav builders ─────────────────────────────────────────────────────────────
 function buildAdminNav(classes: any[]) {

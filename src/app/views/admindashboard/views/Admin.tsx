@@ -71,6 +71,7 @@ const Admin = () => {
   const handleAdd = () => {
     setSelectedAdmin(null);
     setForm({ name: "", email: "", phone: "", address: "", password: "" });
+    setShowPassword(false);
     setView("add");
   };
 
@@ -144,7 +145,7 @@ const Admin = () => {
 
   if (view !== "list") {
     return (
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 p-4 sm:p-6">
         <FormShell
           title="Admin"
           type={view === "add" ? "add" : "edit"}
@@ -235,8 +236,8 @@ const Admin = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 p-4 sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold text-[#180154]">
             Admin Management
@@ -247,13 +248,14 @@ const Admin = () => {
         </div>
         <Button
           onClick={handleAdd}
-          className="bg-[#180154] gap-2 hover:bg-[#180154]/90">
+          className="w-full bg-[#180154] gap-2 hover:bg-[#180154]/90 sm:w-fit">
           <Plus size={16} /> Add Admin
         </Button>
       </div>
 
       <Card className="border-none shadow-sm overflow-hidden ring-1 ring-slate-200">
         <CardContent className="p-0">
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow>
@@ -342,6 +344,7 @@ const Admin = () => {
               )}
             </TableBody>
           </Table>
+          </div>
 
           <div className="border-t px-4">
             <DataTablePagination

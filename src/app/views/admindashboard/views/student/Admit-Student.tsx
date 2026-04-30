@@ -102,7 +102,7 @@ function AdmitStudent() {
         </p>
       </div>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle className="text-sm font-medium uppercase text-muted-foreground">
             Student Information
@@ -127,10 +127,10 @@ function AdmitStudent() {
               {/* Class Selection */}
               <div className="space-y-2">
                 <Label htmlFor="classname">Class</Label>
-                <Select
+                  <Select
                   onValueChange={handleSelectChange}
                   value={formData.classname}>
-                  <SelectTrigger id="classname">
+                  <SelectTrigger id="classname" className="w-full">
                     <SelectValue placeholder="Select a class" />
                   </SelectTrigger>
                   <SelectContent>
@@ -244,11 +244,11 @@ function AdmitStudent() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-4 border-t">
+            <div className="flex justify-end border-t pt-4">
               <Button
                 type="submit"
                 disabled={loading}
-                className="bg-[#180154] hover:bg-[#180154]/90 px-8 gap-2">
+                className="w-full gap-2 bg-[#180154] px-8 hover:bg-[#180154]/90 sm:w-auto">
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (

@@ -37,12 +37,14 @@ import { DeleteModal } from "@/components/DeleteModal";
 import useFetch from "@/hooks/useFetch";
 import axios from "axios";
 import { SessionContext } from "@/contexts/SessionContext";
+import { resolveClassName } from "@/lib/class-utils";
 
 const StudentInformation = () => {
   const { classId } = useParams();
   const navigate = useNavigate();
   const { currentSession } = useContext(SessionContext);
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const resolvedClassName = resolveClassName(classId);
 
   const [showPassword, setShowPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -58,8 +60,8 @@ const StudentInformation = () => {
     loading: fetchLoading,
     reFetch,
   } = useFetch(
-    currentSession && classId
-      ? `/students/${currentSession._id}/${classId.toUpperCase()}`
+    currentSession && resolvedClassName
+      ? `/students/${currentSession._id}/${encodeURIComponent(resolvedClassName)}`
       : null,
   );
   const allStudents = Array.isArray(data) ? data : [];
@@ -277,7 +279,7 @@ const StudentInformation = () => {
       <div className="flex justify-between items-end print:hidden">
         <div>
           <h2 className="text-2xl font-bold text-primary">
-            Student Information - {classId?.toUpperCase()}
+            Student Information - {resolvedClassName || "-"}
           </h2>
           <p className="text-sm text-black">
             Managing {allStudents.length} students
