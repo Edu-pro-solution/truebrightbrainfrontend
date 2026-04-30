@@ -29,7 +29,7 @@ import {
   User,
   ArrowLeft,
   Eye,
-  EyeOff,
+  EyeOff
 } from "lucide-react";
 import { DataTablePagination } from "@/components/DataTablePagination";
 import { DeleteModal } from "@/components/DeleteModal";
@@ -57,20 +57,14 @@ const StudentInformation = () => {
 
   // Data States
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
-
+  
   // Fetch real students — /students/:sessionId/:classname
-  const {
-    data,
-    loading: fetchLoading,
-    reFetch,
-  } = useFetch(
-    currentSession && resolvedClassName
-      ? `/students/${currentSession._id}/${encodeURIComponent(resolvedClassName)}`
-      : null,
+  const { data, loading: fetchLoading, reFetch } = useFetch(
+    currentSession && resolvedClassName ? `/students/${currentSession._id}/${encodeURIComponent(resolvedClassName)}` : null
   );
 
   const allStudents = Array.isArray(data) ? data : [];
-
+  
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentStudents = allStudents.slice(indexOfFirstItem, indexOfLastItem);
@@ -100,9 +94,9 @@ const StudentInformation = () => {
       await axios.put(
         `${apiUrl}/api/put-students/${selectedStudent._id}`,
         updatedData,
-        { headers: { Authorization: `Bearer ${token}` } },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
+      
       setView("list");
       reFetch();
     } catch (err) {
@@ -119,7 +113,7 @@ const StudentInformation = () => {
       const token = localStorage.getItem("jwtToken");
       await axios.delete(
         `${apiUrl}/api/session/${currentSession._id}/users/${selectedStudent._id}`,
-        { headers: { Authorization: `Bearer ${token}` } },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setIsDeleteOpen(false);
       reFetch();
@@ -137,7 +131,7 @@ const StudentInformation = () => {
         <Button
           variant="ghost"
           onClick={() => setView("list")}
-          className="text-slate-500 hover:text-[#180154] gap-2">
+          className="text-slate-500 hover:text-[#004aaa] gap-2">
           <ArrowLeft size={16} /> Back to Student List
         </Button>
 
@@ -152,12 +146,7 @@ const StudentInformation = () => {
             </Label>
             <Input
               defaultValue={selectedStudent?.studentName}
-              onChange={(e) =>
-                setSelectedStudent({
-                  ...selectedStudent,
-                  studentName: e.target.value,
-                })
-              }
+              onChange={(e) => setSelectedStudent({...selectedStudent, studentName: e.target.value})}
               placeholder="e.g. Akinola Al-ameen"
             />
           </div>
@@ -168,12 +157,7 @@ const StudentInformation = () => {
             </Label>
             <Input
               defaultValue={selectedStudent?.AdmNo}
-              onChange={(e) =>
-                setSelectedStudent({
-                  ...selectedStudent,
-                  AdmNo: e.target.value,
-                })
-              }
+              onChange={(e) => setSelectedStudent({...selectedStudent, AdmNo: e.target.value})}
               placeholder="ACE/2026/..."
             />
           </div>
@@ -185,12 +169,7 @@ const StudentInformation = () => {
             <Input
               type="email"
               defaultValue={selectedStudent?.email}
-              onChange={(e) =>
-                setSelectedStudent({
-                  ...selectedStudent,
-                  email: e.target.value,
-                })
-              }
+              onChange={(e) => setSelectedStudent({...selectedStudent, email: e.target.value})}
               placeholder="student@example.com"
             />
           </div>
@@ -199,15 +178,10 @@ const StudentInformation = () => {
             <Label className="text-[10px] font-bold uppercase text-slate-400">
               Phone Number
             </Label>
-            <Input
-              defaultValue={selectedStudent?.phone}
-              onChange={(e) =>
-                setSelectedStudent({
-                  ...selectedStudent,
-                  phone: e.target.value,
-                })
-              }
-              placeholder="080..."
+            <Input 
+              defaultValue={selectedStudent?.phone} 
+              onChange={(e) => setSelectedStudent({...selectedStudent, phone: e.target.value})}
+              placeholder="080..." 
             />
           </div>
 
@@ -234,12 +208,7 @@ const StudentInformation = () => {
             </Label>
             <Input
               defaultValue={selectedStudent?.address}
-              onChange={(e) =>
-                setSelectedStudent({
-                  ...selectedStudent,
-                  address: e.target.value,
-                })
-              }
+              onChange={(e) => setSelectedStudent({...selectedStudent, address: e.target.value})}
               placeholder="Full residential address"
             />
           </div>
@@ -251,12 +220,12 @@ const StudentInformation = () => {
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="********"
-                className="pr-10 border-slate-200 focus:border-[#180154]"
+                className="pr-10 border-slate-200 focus:border-[#004aaa]"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#180154] transition-colors">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#004aaa] transition-colors">
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
@@ -271,7 +240,7 @@ const StudentInformation = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-end print:hidden">
         <div>
-          <h2 className="text-2xl font-bold text-[#180154]">
+          <h2 className="text-2xl font-bold text-[#004aaa]">
             Student Information - {resolvedClassName || "-"}
           </h2>
           <p className="text-sm text-slate-500">
@@ -281,7 +250,7 @@ const StudentInformation = () => {
         <div className="flex gap-3">
           <Button
             onClick={() => navigate("/student/admit")}
-            className="bg-[#180154] gap-2">
+            className="bg-[#004aaa] gap-2">
             <Plus size={16} /> Add Student
           </Button>
           <Button
@@ -298,17 +267,17 @@ const StudentInformation = () => {
           <Table>
             <TableHeader className="bg-[#E8EBF3] print:bg-slate-100">
               <TableRow>
-                <TableHead className="pl-6 font-bold text-[#180154]">
+                <TableHead className="pl-6 font-bold text-[#004aaa]">
                   S/N
                 </TableHead>
-                <TableHead className="font-bold text-[#180154]">
+                <TableHead className="font-bold text-[#004aaa]">
                   Adm No
                 </TableHead>
-                <TableHead className="font-bold text-[#180154]">Name</TableHead>
-                <TableHead className="font-bold text-[#180154] print:hidden">
+                <TableHead className="font-bold text-[#004aaa]">Name</TableHead>
+                <TableHead className="font-bold text-[#004aaa] print:hidden">
                   Email
                 </TableHead>
-                <TableHead className="text-right pr-6 font-bold text-[#180154] print:hidden">
+                <TableHead className="text-right pr-6 font-bold text-[#004aaa] print:hidden">
                   Action
                 </TableHead>
               </TableRow>
@@ -318,16 +287,14 @@ const StudentInformation = () => {
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-10">
                     <div className="flex justify-center items-center gap-2">
-                      <div className="animate-spin h-4 w-4 border-2 border-[#180154] border-t-transparent rounded-full" />
+                      <div className="animate-spin h-4 w-4 border-2 border-[#004aaa] border-t-transparent rounded-full" />
                       Loading students...
                     </div>
                   </TableCell>
                 </TableRow>
               ) : currentStudents.length === 0 ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="text-center py-10 text-slate-500">
+                  <TableCell colSpan={5} className="text-center py-10 text-slate-500">
                     No students found in this class.
                   </TableCell>
                 </TableRow>
@@ -336,9 +303,7 @@ const StudentInformation = () => {
                   <TableRow
                     key={student._id}
                     className="print:border-b hover:bg-slate-50/50">
-                    <TableCell className="pl-6">
-                      {indexOfFirstItem + index + 1}
-                    </TableCell>
+                    <TableCell className="pl-6">{indexOfFirstItem + index + 1}</TableCell>
                     <TableCell className="font-bold">{student.AdmNo}</TableCell>
                     <TableCell className="text-blue-600 font-medium">
                       {student.studentName}

@@ -1,26 +1,8 @@
 import { useContext, useMemo, useState } from "react";
 import {
-  LayoutDashboard,
-  User2,
-  User,
-  NotebookPen,
-  BookCopy,
-  ListChecks,
-  ListCheck,
-  BookOpen,
-  Info,
-  GraduationCap,
-  FileEdit,
-  TableProperties,
-  CheckCheck,
-  Laptop,
-  Laptop2,
-  Disc3,
-  ReceiptText,
-  AlarmClock,
-  Pencil,
-  Settings,
-  LogOut,
+  LayoutDashboard, User2, User, NotebookPen, BookCopy, ListChecks, ListCheck,
+  BookOpen, Info, GraduationCap, FileEdit, TableProperties, CheckCheck,
+  Laptop, Laptop2, Disc3, ReceiptText, AlarmClock, Pencil, Settings, LogOut,
   ChevronRight,
   ChevronDown,
   Upload,
@@ -31,35 +13,20 @@ import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { SessionContext } from "@/contexts/SessionContext";
 import useFetch from "@/hooks/useFetch";
-import { toClassRouteParam } from "@/lib/class-utils";
 import logo from "@/assets/logo.png";
+import { toClassRouteParam } from "@/lib/class-utils";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarHeader,
-  SidebarFooter,
-  useSidebar,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
+  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
+  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, SidebarFooter,
+  useSidebar, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 const className = (c: any) => String(c?.name || c?.className || "");
 // Use name string (not _id) — backend routes expect class name, e.g. "JS1"
-const classId = (c: any) => toClassRouteParam(c?.name || c?.className || "");
+const classId   = (c: any) => toClassRouteParam(c?.name || c?.className || "");
 
 // ── nav builders ─────────────────────────────────────────────────────────────
 function buildAdminNav(classes: any[]) {
@@ -69,14 +36,7 @@ function buildAdminNav(classes: any[]) {
           title: className(c),
           url: `/student/information/${classId(c)}`,
         }))
-      : [
-          { title: "Class J.S.1", url: "/student/information/js1" },
-          { title: "Class J.S.2", url: "/student/information/js2" },
-          { title: "Class J.S.3", url: "/student/information/js3" },
-          { title: "Class S.S.1", url: "/student/information/ss1" },
-          { title: "Class S.S.2", url: "/student/information/ss2" },
-          { title: "Class S.S.3", url: "/student/information/ss3" },
-        ];
+      : [{ title: "No classes yet. Add a class", url: "/class/manage" }];
 
   const subjectSubItems =
     classes.length > 0
@@ -84,14 +44,7 @@ function buildAdminNav(classes: any[]) {
           title: className(c),
           url: `/subject/${classId(c)}`,
         }))
-      : [
-          { title: "Class J.S.1", url: "/subject/js1" },
-          { title: "Class J.S.2", url: "/subject/js2" },
-          { title: "Class J.S.3", url: "/subject/js3" },
-          { title: "Class S.S.1", url: "/subject/ss1" },
-          { title: "Class S.S.2", url: "/subject/ss2" },
-          { title: "Class S.S.3", url: "/subject/ss3" },
-        ];
+      : [{ title: "No classes yet. Add a class", url: "/class/manage" }];
 
   return [
     {
@@ -340,182 +293,89 @@ function buildAdminNav(classes: any[]) {
 }
 
 function buildTeacherNav(classes: any[]) {
-  const classSubItems =
-    classes.length > 0
-      ? classes.map((c) => ({
-          title: className(c),
-          url: `/teacher/dashboard/student-information/${classId(c)}`,
-        }))
-      : [
-          {
-            title: "Class J.S.1",
-            url: "/teacher/dashboard/student-information/js1",
-          },
-          {
-            title: "Class J.S.2",
-            url: "/teacher/dashboard/student-information/js2",
-          },
-          {
-            title: "Class J.S.3",
-            url: "/teacher/dashboard/student-information/js3",
-          },
-          {
-            title: "Class S.S.1",
-            url: "/teacher/dashboard/student-information/ss1",
-          },
-          {
-            title: "Class S.S.2",
-            url: "/teacher/dashboard/student-information/ss2",
-          },
-          {
-            title: "Class S.S.3",
-            url: "/teacher/dashboard/student-information/ss3",
-          },
-        ];
+  const classSubItems = classes.length > 0
+    ? classes.map((c) => ({ title: className(c), url: `/teacher/dashboard/student-information/${classId(c)}` }))
+    : [
+        { title: "Class J.S.1", url: "/teacher/dashboard/student-information/js1" },
+        { title: "Class J.S.2", url: "/teacher/dashboard/student-information/js2" },
+        { title: "Class J.S.3", url: "/teacher/dashboard/student-information/js3" },
+        { title: "Class S.S.1", url: "/teacher/dashboard/student-information/ss1" },
+        { title: "Class S.S.2", url: "/teacher/dashboard/student-information/ss2" },
+        { title: "Class S.S.3", url: "/teacher/dashboard/student-information/ss3" },
+      ];
 
-  const subjectSubItems =
-    classes.length > 0
-      ? classes.map((c) => ({
-          title: className(c),
-          url: `/teacher/dashboard/subject/${classId(c)}`,
-        }))
-      : [
-          { title: "Class J.S.1", url: "/teacher/dashboard/subject/js1" },
-          { title: "Class J.S.2", url: "/teacher/dashboard/subject/js2" },
-          { title: "Class J.S.3", url: "/teacher/dashboard/subject/js3" },
-          { title: "Class S.S.1", url: "/teacher/dashboard/subject/ss1" },
-          { title: "Class S.S.2", url: "/teacher/dashboard/subject/ss2" },
-          { title: "Class S.S.3", url: "/teacher/dashboard/subject/ss3" },
-        ];
+  const subjectSubItems = classes.length > 0
+    ? classes.map((c) => ({ title: className(c), url: `/teacher/dashboard/subject/${classId(c)}` }))
+    : [
+        { title: "Class J.S.1", url: "/teacher/dashboard/subject/js1" },
+        { title: "Class J.S.2", url: "/teacher/dashboard/subject/js2" },
+        { title: "Class J.S.3", url: "/teacher/dashboard/subject/js3" },
+        { title: "Class S.S.1", url: "/teacher/dashboard/subject/ss1" },
+        { title: "Class S.S.2", url: "/teacher/dashboard/subject/ss2" },
+        { title: "Class S.S.3", url: "/teacher/dashboard/subject/ss3" },
+      ];
 
   return [
     {
       label: "Teacher Menu",
       items: [
-        {
-          title: "Dashboard",
-          url: "/teacher/dashboard",
-          icon: LayoutDashboard,
-          key: "teacher-dashboard",
-        },
+        { title: "Dashboard", url: "/teacher/dashboard", icon: LayoutDashboard, key: "teacher-dashboard" },
       ],
     },
     {
       label: "Students",
       items: [
-        {
-          title: "Student Information",
-          icon: NotebookPen,
-          key: "teacher-student-info",
-          subItems: classSubItems,
-        },
+        { title: "Student Information", icon: NotebookPen, key: "teacher-student-info", subItems: classSubItems },
       ],
     },
     {
       label: "Subjects",
       items: [
-        {
-          title: "Subject by Class",
-          icon: BookOpen,
-          key: "teacher-subjects",
-          subItems: subjectSubItems,
-        },
+        { title: "Subject by Class", icon: BookOpen, key: "teacher-subjects", subItems: subjectSubItems },
       ],
     },
     {
       label: "Affective Psychomotor",
       items: [
-        {
-          title: "Student Report",
-          url: "/psycho/stu-report",
-          icon: ListCheck,
-          key: "psycho-report",
-        },
+        { title: "Student Report", url: "/psycho/stu-report", icon: ListCheck, key: "psycho-report" },
       ],
     },
     {
       label: "Exam",
       items: [
-        {
-          title: "Manage Marks",
-          url: "/teacher/dashboard/manage-mark-view",
-          icon: FileEdit,
-          key: "manage-marks",
-        },
-        {
-          title: "Tabulation Sheet",
-          url: "/dashboard/tabulation-sheet",
-          icon: TableProperties,
-          key: "tabulation",
-        },
-        {
-          title: "On Screen Marking",
-          url: "/exam/onscreenmarking",
-          icon: CheckCheck,
-          key: "onscreen-marking",
-        },
+        { title: "Manage Marks", url: "/teacher/dashboard/manage-mark-view", icon: FileEdit, key: "manage-marks" },
+        { title: "Tabulation Sheet", url: "/dashboard/tabulation-sheet", icon: TableProperties, key: "tabulation" },
+        { title: "On Screen Marking", url: "/exam/onscreenmarking", icon: CheckCheck, key: "onscreen-marking" },
       ],
     },
     {
       label: "Online Exam",
       items: [
-        {
-          title: "Create Online Exam",
-          url: "/dashboard/online-exam",
-          icon: Laptop,
-          key: "onlinexam",
-        },
-        {
-          title: "Manage Online Exam",
-          url: "/dashboard/manage-online-exam",
-          icon: Laptop2,
-          key: "onlinexam",
-        },
+        { title: "Create Online Exam", url: "/dashboard/online-exam", icon: Laptop, key: "onlinexam" },
+        { title: "Manage Online Exam", url: "/dashboard/manage-online-exam", icon: Laptop2, key: "onlinexam" },
       ],
     },
     {
       label: "AI Tools",
       items: [
-        {
-          title: "Homework Review",
-          url: "/teacher/dashboard/homework",
-          icon: MessageSquareText,
-          key: "homework",
-        },
+        { title: "Homework Review", url: "/teacher/dashboard/homework", icon: MessageSquareText, key: "homework" },
       ],
     },
     {
       label: "Notice Board",
-      items: [
-        { title: "Noticeboard", url: "/notices", icon: Info, key: "notice" },
-      ],
+      items: [{ title: "Noticeboard", url: "/notices", icon: Info, key: "notice" }],
     },
     {
       label: "Material & Attendance",
       items: [
-        {
-          title: "Study Material",
-          url: "/studymaterial",
-          icon: Disc3,
-          key: "studymaterial",
-        },
-        {
-          title: "Daily Attendance",
-          url: "/dailyattend",
-          icon: AlarmClock,
-          key: "dailyattend",
-        },
+        { title: "Study Material", url: "/studymaterial", icon: Disc3, key: "studymaterial" },
+        { title: "Daily Attendance", url: "/dailyattend", icon: AlarmClock, key: "dailyattend" },
       ],
     },
     {
       label: "System",
       items: [
-        {
-          title: "Profile",
-          url: "/dashboard/profile",
-          icon: User2,
-          key: "settings",
-        },
+        { title: "Profile", url: "/dashboard/profile", icon: User2, key: "settings" },
       ],
     },
   ];
@@ -526,119 +386,52 @@ function buildStudentNav(_classes: any[]) {
     {
       label: "Student Menu",
       items: [
-        {
-          title: "Dashboard",
-          url: "/student/dashboard/default",
-          icon: LayoutDashboard,
-          key: "student-dashboard",
-        },
-        {
-          title: "Teachers",
-          url: "/student/dashboard/teacher",
-          icon: User,
-          key: "teacher",
-        },
-        {
-          title: "Subjects",
-          url: "/student/dashboard/subject",
-          icon: BookOpen,
-          key: "subject",
-        },
+        { title: "Dashboard", url: "/student/dashboard/default", icon: LayoutDashboard, key: "student-dashboard" },
+        { title: "Teachers", url: "/student/dashboard/teacher", icon: User, key: "teacher" },
+        { title: "Subjects", url: "/student/dashboard/subject", icon: BookOpen, key: "subject" },
       ],
     },
     {
       label: "Class Information",
       items: [
-        {
-          title: "My Class",
-          url: "/student/dashboard/my-class",
-          icon: NotebookPen,
-          key: "student-info",
-        },
+        { title: "My Class", url: "/student/dashboard/my-class", icon: NotebookPen, key: "student-info" },
       ],
     },
     {
       label: "Exam & Results",
       items: [
-        {
-          title: "Exam List",
-          url: "/student/dashboard/examlist",
-          icon: ListChecks,
-          key: "exam-list",
-        },
-        {
-          title: "My Results",
-          url: "/student/dashboard/student_mark_sheet",
-          icon: GraduationCap,
-          key: "student-dashboard",
-        },
+        { title: "Exam List", url: "/student/dashboard/examlist", icon: ListChecks, key: "exam-list" },
+        { title: "My Results", url: "/student/dashboard/student_mark_sheet", icon: GraduationCap, key: "student-dashboard" },
       ],
     },
     {
       label: "Online Exam",
       items: [
-        {
-          title: "Take Online Exam",
-          url: "/student/dashboard/manage-online-exam",
-          icon: Laptop,
-          key: "onlinexam",
-        },
+        { title: "Take Online Exam", url: "/student/dashboard/manage-online-exam", icon: Laptop, key: "onlinexam" },
       ],
     },
     {
       label: "AI Tools",
       items: [
-        {
-          title: "Homework",
-          url: "/student/dashboard/homework",
-          icon: MessageSquareText,
-          key: "homework",
-        },
-        {
-          title: "Past Questions (JAMB)",
-          url: "https://cbt.edupro.com.ng",
-          icon: Disc3,
-          key: "onlinexam",
-        },
+        { title: "Homework", url: "/student/dashboard/homework", icon: MessageSquareText, key: "homework" },
+        { title: "Past Questions (JAMB)", url: "https://cbt.edupro.com.ng", icon: Disc3, key: "onlinexam" },
       ],
     },
     {
       label: "Payments & Materials",
       items: [
-        {
-          title: "Payment History",
-          url: "/student/dashboard/student-payment",
-          icon: ReceiptText,
-          key: "studentAccounting",
-        },
-        {
-          title: "Study Material",
-          url: "/student/dashboard/student-material",
-          icon: BookCopy,
-          key: "studymaterial",
-        },
+        { title: "Payment History", url: "/student/dashboard/student-payment", icon: ReceiptText, key: "studentAccounting" },
+        { title: "Study Material", url: "/student/dashboard/student-material", icon: BookCopy, key: "studymaterial" },
       ],
     },
     {
       label: "Notice Board",
-      items: [
-        {
-          title: "Noticeboard",
-          url: "/student/dashboard/notices",
-          icon: Info,
-          key: "notice",
-        },
-      ],
+      items: [{ title: "Noticeboard", url: "/student/dashboard/notices", icon: Info, key: "notice" }],
     },
     {
       label: "System",
       items: [
-        {
-          title: "Profile",
-          url: "/student/dashboard/profile",
-          icon: User2,
-          key: "settings",
-        },
+        { title: "Profile", url: "/student/dashboard/profile", icon: User2, key: "settings" },
       ],
     },
   ];
@@ -649,30 +442,10 @@ function buildParentNav() {
     {
       label: "Parent Menu",
       items: [
-        {
-          title: "Dashboard",
-          url: "/parent/dashboard",
-          icon: LayoutDashboard,
-          key: "dashboard",
-        },
-        {
-          title: "Ward Results",
-          url: "/parent/dashboard/results",
-          icon: GraduationCap,
-          key: "parent-results",
-        },
-        {
-          title: "Ward Materials",
-          url: "/parent/dashboard/materials",
-          icon: BookCopy,
-          key: "parent-materials",
-        },
-        {
-          title: "Ward Homework",
-          url: "/parent/dashboard/homework",
-          icon: MessageSquareText,
-          key: "parent-homework",
-        },
+        { title: "Dashboard", url: "/parent/dashboard", icon: LayoutDashboard, key: "dashboard" },
+        { title: "Ward Results", url: "/parent/dashboard/results", icon: GraduationCap, key: "parent-results" },
+        { title: "Ward Materials", url: "/parent/dashboard/materials", icon: BookCopy, key: "parent-materials" },
+        { title: "Ward Homework", url: "/parent/dashboard/homework", icon: MessageSquareText, key: "parent-homework" },
       ],
     },
   ];
@@ -687,28 +460,21 @@ export function AppSidebar() {
   const { currentSession } = useContext(SessionContext);
 
   const { data: rawClasses } = useFetch(
-    currentSession?._id ? `/class/${currentSession._id}` : null,
+    currentSession?._id ? `/class/${currentSession._id}` : null
   );
   const classes = useMemo(
-    () =>
-      Array.isArray(rawClasses)
-        ? [...rawClasses].sort((a, b) =>
-            String(a.name || "").localeCompare(String(b.name || "")),
-          )
-        : [],
-    [rawClasses],
+    () => Array.isArray(rawClasses)
+      ? [...rawClasses].sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")))
+      : [],
+    [rawClasses]
   );
 
   const nav = useMemo(() => {
     switch (user?.role) {
-      case "teacher":
-        return buildTeacherNav(classes);
-      case "student":
-        return buildStudentNav(classes);
-      case "parent":
-        return buildParentNav();
-      default:
-        return buildAdminNav(classes);
+      case "teacher": return buildTeacherNav(classes);
+      case "student": return buildStudentNav(classes);
+      case "parent": return buildParentNav();
+      default:        return buildAdminNav(classes);
     }
   }, [user?.role, classes]);
 
@@ -725,32 +491,26 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b border-sidebar-border bg-[#180154] p-4">
+      <SidebarHeader className="border-b border-sidebar-border bg-[#004aaa] p-4">
         <div className="flex items-center gap-3">
-          <img
-            src={logo}
-            alt="EduPro"
-            className="h-10 w-10 rounded object-contain"
-          />
+          <img src={logo} alt="EduPro" className="h-10 w-10 rounded object-contain" />
           {!collapsed && (
             <div className="flex flex-col">
               <span className="text-sm font-bold text-sidebar-foreground leading-tight">
-                True Bright Brain Schools
+                EDANA Schools
               </span>
               <span className="text-[10px] text-white">
-                truebrightbrainschools2@gmail.com
+                edanamonteschools@gmail.com
               </span>
             </div>
           )}
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="bg-[#180154] py-2 text-white [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/40 hover:[&::-webkit-scrollbar-thumb]:bg-white/60">
+      <SidebarContent className="bg-[#004aaa] py-2 text-white [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/40 hover:[&::-webkit-scrollbar-thumb]:bg-white/60">
         {nav.map((group) => (
           <SidebarGroup key={group.label}>
-            <Collapsible
-              open={collapsed ? false : isGroupOpen(group.label)}
-              onOpenChange={() => toggleGroup(group.label)}>
+            <Collapsible open={collapsed ? false : isGroupOpen(group.label)} onOpenChange={() => toggleGroup(group.label)}>
               <SidebarGroupLabel asChild className="px-2">
                 <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-2 text-[10px] uppercase tracking-wider text-white/70 hover:bg-white/12 hover:text-white">
                   <span>{group.label}</span>
@@ -763,15 +523,10 @@ export function AppSidebar() {
                     {group.items.map((item) => {
                       if ("subItems" in item && item.subItems) {
                         return (
-                          <Collapsible
-                            key={item.title}
-                            asChild
-                            className="group/collapsible">
+                          <Collapsible key={item.title} asChild className="group/collapsible">
                             <SidebarMenuItem>
                               <CollapsibleTrigger asChild>
-                                <SidebarMenuButton
-                                  tooltip={item.title}
-                                  className="text-white hover:bg-white/12 hover:text-white data-[active=true]:bg-white data-[active=true]:text-[#180154]">
+                                <SidebarMenuButton tooltip={item.title} className="text-white hover:bg-white/12 hover:text-white data-[active=true]:bg-white data-[active=true]:text-[#004aaa]">
                                   <item.icon className="mr-2 h-4 w-4 shrink-0" />
                                   <span>{item.title}</span>
                                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -781,13 +536,8 @@ export function AppSidebar() {
                                 <SidebarMenuSub>
                                   {item.subItems.map((sub) => (
                                     <SidebarMenuSubItem key={sub.title}>
-                                      <SidebarMenuSubButton
-                                        asChild
-                                        isActive={currentPath === sub.url}
-                                        className="text-white/80 hover:bg-white/10 hover:text-white data-[active=true]:bg-white data-[active=true]:text-[#180154]">
-                                        <NavLink to={sub.url}>
-                                          {sub.title}
-                                        </NavLink>
+                                      <SidebarMenuSubButton asChild isActive={currentPath === sub.url} className="text-white/80 hover:bg-white/10 hover:text-white data-[active=true]:bg-white data-[active=true]:text-[#004aaa]">
+                                        <NavLink to={sub.url}>{sub.title}</NavLink>
                                       </SidebarMenuSubButton>
                                     </SidebarMenuSubItem>
                                   ))}
@@ -803,25 +553,14 @@ export function AppSidebar() {
 
                       return (
                         <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton
-                            asChild
-                            isActive={currentPath === url}
-                            className="text-white hover:bg-white/12 hover:text-white data-[active=true]:bg-white data-[active=true]:text-[#180154]">
+                          <SidebarMenuButton asChild isActive={currentPath === url} className="text-white hover:bg-white/12 hover:text-white data-[active=true]:bg-white data-[active=true]:text-[#004aaa]">
                             {isExternal ? (
-                              <a
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center rounded-md px-2 py-2 hover:bg-white/12">
+                              <a href={url} target="_blank" rel="noopener noreferrer" className="flex items-center rounded-md px-2 py-2 hover:bg-white/12">
                                 <item.icon className="mr-2 h-4 w-4 shrink-0" />
                                 {!collapsed && <span>{item.title}</span>}
                               </a>
                             ) : (
-                              <NavLink
-                                to={url}
-                                end
-                                activeClassName="bg-white text-[#180154] font-semibold"
-                                className="rounded-md px-2 py-2 hover:bg-white/12">
+                              <NavLink to={url} end activeClassName="bg-white text-[#004aaa] font-semibold" className="rounded-md px-2 py-2 hover:bg-white/12">
                                 <item.icon className="mr-2 h-4 w-4 shrink-0" />
                                 {!collapsed && <span>{item.title}</span>}
                               </NavLink>
@@ -838,7 +577,7 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border bg-[#180154] p-3">
+      <SidebarFooter className="border-t border-sidebar-border bg-[#004aaa] p-3">
         <Button
           variant="ghost"
           className="w-full justify-start text-white hover:bg-white/12 hover:text-white"

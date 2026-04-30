@@ -41,16 +41,16 @@ function Subject() {
   const { data, loading: listLoading, error, reFetch } = useFetch(subjectsUrl);
 
   const { data: teacherData } = useFetch(
-    currentSession?._id ? `/get-teachers/${currentSession._id}` : null,
+    currentSession?._id ? `/get-teachers/${currentSession._id}` : null
   );
   const teachers = useMemo(
     () => (Array.isArray(teacherData) ? (teacherData as any[]) : []),
-    [teacherData],
+    [teacherData]
   );
 
   const filtered = useMemo(
     () => (Array.isArray(data) ? (data as Record<string, unknown>[]) : []),
-    [data],
+    [data]
   );
 
   const [view, setView] = useState<"list" | "add" | "edit">("list");
@@ -81,10 +81,7 @@ function Subject() {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentSession?._id) {
-      toast.error("No active session");
-      return;
-    }
+    if (!currentSession?._id) { toast.error("No active session"); return; }
     if (!normalizedSubjectName) {
       toast.error("Subject name is required");
       return;
@@ -108,14 +105,14 @@ function Subject() {
         await axios.post(
           `${apiUrl}/api/create-subject/${currentSession._id}`,
           payload,
-          { headers: authHeaders() },
+          { headers: authHeaders() }
         );
         toast.success("Subject created successfully");
       } else if (view === "edit" && selectedSubject?._id) {
         await axios.put(
           `${apiUrl}/api/update-subject/${selectedSubject._id}`,
           payload,
-          { headers: authHeaders() },
+          { headers: authHeaders() }
         );
         toast.success("Subject updated successfully");
       }
@@ -138,7 +135,7 @@ function Subject() {
     try {
       await axios.delete(
         `${apiUrl}/api/delete-subject/${selectedSubject._id}`,
-        { headers: authHeaders() },
+        { headers: authHeaders() }
       );
       await reFetch();
       toast.success("Subject deleted successfully");
@@ -199,9 +196,7 @@ function Subject() {
               </SelectTrigger>
               <SelectContent>
                 {teachers.map((t: any) => (
-                  <SelectItem
-                    key={t._id}
-                    value={t.username || t.teacherName || t.name || t._id}>
+                  <SelectItem key={t._id} value={t.username || t.teacherName || t.name || t._id}>
                     {t.username || t.teacherName || t.name || "Unknown"}
                   </SelectItem>
                 ))}
@@ -217,18 +212,14 @@ function Subject() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[#180154]">Subjects</h2>
+          <h2 className="text-2xl font-bold text-[#004aaa]">Subjects</h2>
           <p className="text-sm text-slate-500 uppercase">
             {classId || "All Classes"}
           </p>
         </div>
         <Button
-          onClick={() => {
-            setSubjectName("");
-            setSelectedTeacher("");
-            setView("add");
-          }}
-          className="w-full bg-[#180154] gap-2 hover:bg-[#180154]/90 sm:w-fit">
+          onClick={() => { setSubjectName(""); setSelectedTeacher(""); setView("add"); }}
+          className="w-full gap-2 bg-[#004aaa] hover:bg-[#004aaa]/90 sm:w-fit">
           <Plus className="h-4 w-4" /> Add new Subject
         </Button>
       </div>
@@ -239,45 +230,29 @@ function Subject() {
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow>
-                <TableHead className="w-[80px] text-[#180154] font-bold pl-6">
-                  S/N
-                </TableHead>
-                <TableHead className="text-[#180154] font-bold">
-                  Subject
-                </TableHead>
-                <TableHead className="text-[#180154] font-bold">
-                  Teacher
-                </TableHead>
-                <TableHead className="text-[#180154] font-bold">
-                  Class
-                </TableHead>
-                <TableHead className="text-right text-[#180154] font-bold pr-6">
-                  Action
-                </TableHead>
+                <TableHead className="w-[80px] text-[#004aaa] font-bold pl-6">S/N</TableHead>
+                <TableHead className="text-[#004aaa] font-bold">Subject</TableHead>
+                <TableHead className="text-[#004aaa] font-bold">Teacher</TableHead>
+                <TableHead className="text-[#004aaa] font-bold">Class</TableHead>
+                <TableHead className="text-right text-[#004aaa] font-bold pr-6">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {listLoading ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="py-12 text-center text-slate-500">
+                  <TableCell colSpan={5} className="py-12 text-center text-slate-500">
                     Loading subjects…
                   </TableCell>
                 </TableRow>
               ) : error ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="py-8 text-center text-sm text-destructive">
+                  <TableCell colSpan={5} className="py-8 text-center text-sm text-destructive">
                     Failed to load subjects for this class.
                   </TableCell>
                 </TableRow>
               ) : filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="py-12 text-center text-slate-500">
+                  <TableCell colSpan={5} className="py-12 text-center text-slate-500">
                     No subjects found.
                   </TableCell>
                 </TableRow>
@@ -289,20 +264,14 @@ function Subject() {
                     <TableCell className="pl-6 text-slate-500">
                       {indexOfFirst + index + 1}
                     </TableCell>
-                    <TableCell className="font-bold text-[#180154]">
-                      {(sub.subjectName as string) ||
-                        (sub.name as string) ||
-                        "—"}
+                    <TableCell className="font-bold text-[#004aaa]">
+                      {(sub.subjectName as string) || (sub.name as string) || "—"}
                     </TableCell>
                     <TableCell className="text-blue-600 font-medium">
-                      {(sub.teacherName as string) ||
-                        (sub.teacher as string) ||
-                        "—"}
+                      {(sub.teacherName as string) || (sub.teacher as string) || "—"}
                     </TableCell>
                     <TableCell className="text-slate-600 uppercase font-semibold text-xs">
-                      {(sub.classname as string) ||
-                        (sub.class as string) ||
-                        classNameStr}
+                      {(sub.classname as string) || (sub.class as string) || classNameStr}
                     </TableCell>
                     <TableCell className="text-right pr-6">
                       <div className="flex justify-end gap-2">
@@ -316,10 +285,7 @@ function Subject() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => {
-                            setSelectedSubject(sub);
-                            setIsDeleteOpen(true);
-                          }}
+                          onClick={() => { setSelectedSubject(sub); setIsDeleteOpen(true); }}
                           className="h-8 w-8 text-destructive hover:bg-red-50">
                           <Trash2 className="h-4 w-4" />
                         </Button>

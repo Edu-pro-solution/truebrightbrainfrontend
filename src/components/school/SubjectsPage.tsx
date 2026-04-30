@@ -47,7 +47,7 @@ export default function SubjectsPage({ title = "Subjects" }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-[#180154]">{title}</h2>
+        <h2 className="text-2xl font-bold text-[#004aaa]">{title}</h2>
         <p className="text-sm uppercase text-slate-500">
           {resolvedClassName}
         </p>
@@ -58,18 +58,16 @@ export default function SubjectsPage({ title = "Subjects" }: Props) {
           <Table>
             <TableHeader className="bg-[#E8EBF3]">
               <TableRow>
-                <TableHead className="w-[80px] text-[#180154] font-bold pl-6">
+                <TableHead className="w-[80px] text-[#004aaa] font-bold pl-6">
                   S/N
                 </TableHead>
-                <TableHead className="text-[#180154] font-bold">
+                <TableHead className="text-[#004aaa] font-bold">
                   Subject
                 </TableHead>
-                <TableHead className="text-[#180154] font-bold">
+                <TableHead className="text-[#004aaa] font-bold">
                   Teacher
                 </TableHead>
-                <TableHead className="text-[#180154] font-bold">
-                  Class
-                </TableHead>
+                <TableHead className="text-[#004aaa] font-bold">Class</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -77,7 +75,7 @@ export default function SubjectsPage({ title = "Subjects" }: Props) {
                 <TableRow>
                   <TableCell colSpan={4} className="py-12 text-center">
                     <div className="inline-flex items-center gap-2 text-slate-500">
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#180154] border-t-transparent" />
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#004aaa] border-t-transparent" />
                       Loading subjects...
                     </div>
                   </TableCell>
@@ -97,11 +95,12 @@ export default function SubjectsPage({ title = "Subjects" }: Props) {
                 subjects.map((subject, index) => (
                   <TableRow
                     key={subject._id || subject.id || index}
-                    className="hover:bg-slate-50/50">
+                    className="hover:bg-slate-50/50"
+                  >
                     <TableCell className="pl-6 font-medium text-slate-500">
                       {index + 1}
                     </TableCell>
-                    <TableCell className="font-bold text-[#180154]">
+                    <TableCell className="font-bold text-[#004aaa]">
                       {subject.subjectName || subject.name || "Unnamed Subject"}
                     </TableCell>
                     <TableCell className="text-blue-600 font-medium">
